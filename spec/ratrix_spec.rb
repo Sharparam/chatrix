@@ -1,5 +1,3 @@
-require 'spec_helper'
-
 describe Ratrix do
   it 'has a version number' do
     expect(Ratrix::VERSION).not_to be nil
