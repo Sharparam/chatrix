@@ -162,5 +162,6 @@ bh_unicode_properties.cache
 # https://packagecontrol.io/packages/sublime-github
 GitHub.sublime-settings
 
+### Custom rules ###
 # Ignore access token file
 access_token.txt
