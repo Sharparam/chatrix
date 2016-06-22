@@ -52,8 +52,8 @@ module Ratrix
     #
     # @param homeserver [String] The API endpoint to use (homeserver).
     # @param token [String] The access token to use.
-    # @param api_path [String]
-    #   The API path is added between the endpoint and the request path.
+    # @param api_path [String] The API path is added between the endpoint
+    #   and the request path.
     #
     #   Ex: `https://matrix.org/_matrix/client/api/v1/initialSync`
     #
