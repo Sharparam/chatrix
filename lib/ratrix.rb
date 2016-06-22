@@ -1,6 +1,6 @@
 require 'ratrix/version'
-require 'ratrix/matrix/api'
+require 'ratrix/errors'
+require 'ratrix/matrix'
 
 module Ratrix
-  # Your code goes here...
 end
