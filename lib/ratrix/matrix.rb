@@ -36,8 +36,8 @@ module Ratrix
     # Default homeserver used if none is specified.
     DEFAULT_HOMESERVER = 'https://matrix.org'.freeze
 
-    # Default API path used if none is specified.
-    DEFAULT_API_PATH = '/_matrix/client/r0'.freeze
+    # API path used.
+    API_PATH = '/_matrix/client/r0'.freeze
 
     # @!attribute access_token
     #   @return [String] The access token used when performing requests
@@ -50,24 +50,11 @@ module Ratrix
 
     # Initializes a new instance of Ratrix::Matrix.
     #
-    # @param homeserver [String] The API endpoint to use (homeserver).
     # @param token [String] The access token to use.
-    # @param api_path [String] The API path is added between the endpoint
-    #   and the request path.
-    #
-    #   Ex: `https://matrix.org/_matrix/client/api/v1/initialSync`
-    #
-    #   In the above example, `https://matrix.org` is the endpoint,
-    #   `/_matrix/client/api/v1` is the API path, and
-    #   `/initialSync` is the request path.
-    def initialize(
-      homeserver = DEFAULT_HOMESERVER,
-      token = nil,
-      api_path = DEFAULT_API_PATH
-    )
+    # @param homeserver [String] The homeserver to make requests to.
+    def initialize(token = nil, homeserver = DEFAULT_HOMESERVER)
       @homeserver = homeserver
-      @api_path = api_path
-      @base_uri = @homeserver + @api_path
+      @base_uri = @homeserver + API_PATH
       @transaction_id = 0
       @access_token = token
     end
