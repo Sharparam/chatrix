@@ -12,6 +12,7 @@ module Ratrix
             'Content-Type' => 'application/json',
             'Accept' => 'application/json')
 
+    # Maps HTTP methods to their respective HTTParty method.
     METHODS = {
       get: -> (path, options, &block) { get path, options, &block },
       put: -> (path, options, &block) { put path, options, &block },
