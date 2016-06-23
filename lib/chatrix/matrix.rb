@@ -646,7 +646,7 @@ module Chatrix
         :get,
         '/publicRooms',
         params: {
-          from: start,
+          from: from,
           to: to,
           limit: limit,
           dir: direction
