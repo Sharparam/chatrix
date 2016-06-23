@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'ratrix/version'
+require 'chatrix/version'
 
 Gem::Specification.new do |spec|
-  spec.name = 'ratrix'
-  spec.version       = Ratrix::VERSION
+  spec.name          = 'chatrix'
+  spec.version       = Chatrix::VERSION
   spec.authors       = ['Adam Hellberg']
   spec.email         = ['sharparam@sharparam.com']
 
   spec.summary       = 'Ruby implementation of the Matrix API'
   # spec.description   = %q{}
-  spec.homepage      = 'https://github.com/Sharparam/ratrix'
+  spec.homepage      = 'https://github.com/Sharparam/chatrix'
   spec.license       = 'MIT'
 
   spec.files         = `git ls-files -z`.split("\x0").reject do |f|

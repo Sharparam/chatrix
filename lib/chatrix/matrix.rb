@@ -1,8 +1,8 @@
-require 'ratrix/errors'
+require 'chatrix/errors'
 
 require 'httparty'
 
-module Ratrix
+module Chatrix
   # Provides an interface to the Matrix API on a homeserver.
   #
   # Detailed information about the data structures is not included here and
@@ -21,7 +21,7 @@ module Ratrix
   class Matrix
     include HTTParty
 
-    headers('User-Agent' => "ratrix/#{Ratrix::VERSION}",
+    headers('User-Agent' => "chatrix/#{Chatrix::VERSION}",
             'Content-Type' => 'application/json',
             'Accept' => 'application/json')
 
@@ -48,7 +48,7 @@ module Ratrix
     #   @return [String] The homeserver for this API object.
     attr_reader :homeserver
 
-    # Initializes a new instance of Ratrix::Matrix.
+    # Initializes a new instance of Matrix.
     #
     # @param token [String] The access token to use.
     # @param homeserver [String] The homeserver to make requests to.

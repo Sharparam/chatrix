@@ -1,10 +1,10 @@
-module Ratrix
+module Chatrix
   # Generic faults from the library.
-  class RatrixError < StandardError
+  class ChatrixError < StandardError
   end
 
   # Errors that stem from an API call.
-  class ApiError < RatrixError
+  class ApiError < ChatrixError
   end
 
   # Error raised when a request is badly formatted.

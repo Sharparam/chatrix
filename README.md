@@ -1,5 +1,5 @@
-ratrix
-======
+chatrix
+=======
 
 A Ruby implementation of the [Matrix][matrix] API.
 
@@ -7,7 +7,7 @@ A Ruby implementation of the [Matrix][matrix] API.
 
 Copyright (c) 2016 by Adam Hellberg.
 
-ratrix is licensed under the [MIT License][license-url], see the file
+chatrix is licensed under the [MIT License][license-url], see the file
 `LICENSE` for more information.
 
 ## Installation
@@ -15,7 +15,7 @@ ratrix is licensed under the [MIT License][license-url], see the file
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'ratrix'
+gem 'chatrix'
 ```
 
 And then execute:
@@ -24,7 +24,7 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install ratrix
+    $ gem install chatrix
 
 ## Usage
 
@@ -33,12 +33,12 @@ in the `Matrix` class. Example usage:
 
 ```ruby
 # Uses the standard matrix.org homeserver
-rat = Ratrix::Matrix.new 'my secret token'
+api = Chatrix::Matrix.new 'my secret token'
 
 # Join may raise ForbiddenError if client does not have permission
 # to join the room
-if id = rat.join '#myroom:myserver.org'
-  rat.send_message id, 'Hello everyone!'
+if id = api.join '#myroom:myserver.org'
+  api.send_message id, 'Hello everyone!'
 end
 ```
 
@@ -57,7 +57,7 @@ To install this gem onto your local machine, run `bundle exec rake install`.
 
 Bug reports and pull requests are welcome on [GitHub][issues].
 
-[project]: https://github.com/Sharparam/ratrix
-[issues]: https://github.com/Sharparam/ratrix/issues
+[project]: https://github.com/Sharparam/chatrix
+[issues]: https://github.com/Sharparam/chatrix/issues
 [matrix]: http://matrix.org
 [license-url]: http://opensource.org/licenses/MIT
