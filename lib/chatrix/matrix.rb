@@ -128,7 +128,7 @@ module Chatrix
     # @return [Hash{String=>Hash}] A hash with tag data. The tag name is
     #   the key and any additional metadata is contained in the Hash value.
     def get_user_room_tags(user, room)
-      room = get_room_id room if room.start_with? '#'
+      room = resolve_room room
       make_request(:get, "/user/#{user}/rooms/#{room}/tags")['tags']
     end
 
@@ -169,10 +169,9 @@ module Chatrix
     #   happening before and after the specified event, as well as start and
     #   end timestamps and state information for the event.
     def get_event_context(room, event, limit = 10)
-      room = get_room_id room if room.start_with? '#'
       make_request(
         :get,
-        "/rooms/#{room}/context/#{event}",
+        "/rooms/#{resolve_room room}/context/#{event}",
         params: { limit: limit }
       ).parsed_response
     end
@@ -182,8 +181,7 @@ module Chatrix
     # @param room [String] The room to query.
     # @return [Array] An array of users that are in this room.
     def get_room_members(room)
-      room = get_room_id room if room.start_with? '#'
-      make_request(:get, "/rooms/#{room}/members")['chunk']
+      make_request(:get, "/rooms/#{resolve_room room}/members")['chunk']
     end
 
     # Get a list of messages from a room.
@@ -195,10 +193,9 @@ module Chatrix
     # @return [Hash] A hash containing the messages, as well as `start` and
     #   `end` tokens for pagination.
     def get_room_messages(room, from, direction, limit = 10)
-      room = get_room_id room if room.start_with? '#'
       make_request(
         :get,
-        "/rooms/#{room}/messages",
+        "/rooms/#{resolve_room room}/messages",
         params: {
           from: from,
           dir: direction,
@@ -219,11 +216,9 @@ module Chatrix
     # @see #send_notice
     # @see #send_html
     def send_message_raw(room, content, type = 'm.room.message')
-      room = get_room_id room if room.start_with? '#'
-      @transaction_id += 1
       make_request(
         :put,
-        "/rooms/#{room}/send/#{type}/#{@transaction_id}",
+        "/rooms/#{resolve_room room}/send/#{type}/#{@transaction_id += 1}",
         content: content
       )['event_id']
     end
@@ -324,7 +319,7 @@ module Chatrix
     #
     # rubocop:disable MethodLength
     def get_room_state(room, type = nil, key = nil)
-      room = get_room_id room if room.start_with? '#'
+      room = resolve_room room
 
       if type && key
         make_request(
@@ -350,13 +345,11 @@ module Chatrix
     # @return [Boolean] `true` if the message sent successfully, otherwise
     #   `false`.
     def send_typing(room, user, typing = true, duration = 30_000)
-      room = get_room_id room if room.start_with? '#'
-
       content = { typingState: { typing: typing, timeout: duration } }
 
       make_request(
         :put,
-        "/rooms/#{room}/typing/#{user}",
+        "/rooms/#{resolve_room room}/typing/#{user}",
         content: content
       ).code == 200
     end
@@ -429,10 +422,9 @@ module Chatrix
     # @example Banning a spammer
     #   ban('#haven:matrix.org', '@spammer:spam.com', 'Spamming the room')
     def ban(room, user, reason)
-      room = get_room_id room if room.start_with? '#'
       make_request(
         :post,
-        "/rooms/#{room}/ban",
+        "/rooms/#{resolve_room room}/ban",
         content: { reason: reason, user_id: user }
       ).code == 200
     end
@@ -443,8 +435,7 @@ module Chatrix
     # @return [Boolean] `true` if the room was forgotten successfully,
     #   otherwise `false`.
     def forget(room)
-      room = get_room_id room if room.start_with? '#'
-      make_request(:post, "/rooms/#{room}/forget").code == 200
+      make_request(:post, "/rooms/#{resolve_room room}/forget").code == 200
     end
 
     # Kicks a user from a room.
@@ -461,10 +452,9 @@ module Chatrix
     # @example Kicking an annoying user
     #   kick('#fun:matrix.org', '@anon:4chan.org', 'Bad cropping')
     def kick(room, user, reason)
-      room = get_room_id room if room.start_with? '#'
       make_request(
         :post,
-        "/rooms/#{room}/kick",
+        "/rooms/#{resolve_room room}/kick",
         content: { reason: reason, user_id: user }
       ).code == 200
     end
@@ -475,8 +465,7 @@ module Chatrix
     # @return [Boolean] `true` if the room was left successfully,
     #   otherwise `false`.
     def leave(room)
-      room = get_room_id room if room.start_with? '#'
-      make_request(:post, "/rooms/#{room}/leave").code == 200
+      make_request(:post, "/rooms/#{resolve_room room}/leave").code == 200
     end
 
     # Unbans a user from a room.
@@ -486,10 +475,9 @@ module Chatrix
     # @return [Boolean] `true` if the user was successfully unbanned,
     #   otherwise `false`.
     def unban(room, user)
-      room = get_room_id room if room.start_with? '#'
       make_request(
         :post,
-        "/rooms/#{room}/unban",
+        "/rooms/#{resolve_room room}/unban",
         content: { user_id: user }
       ).code == 200
     end
@@ -661,6 +649,14 @@ module Chatrix
     end
 
     private
+
+    # Resolves a room to its ID (if it's not already an ID).
+    #
+    # @param room [String] The room identifier to resolve (can be a room alias).
+    # @return [String] The actual room ID.
+    def resolve_room(room)
+      room.start_with?('!') ? room : get_room_id(room)
+    end
 
     # Create an options Hash to pass to a server request.
     #
