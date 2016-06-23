@@ -1,6 +1,13 @@
 chatrix
 =======
 
+[![Gem version][gem-badge-img]][gem-badge]
+[![Dependency status][gemnasium-img]][gemnasium]
+[![Build status][travis-img]][travis]
+[![Code climate][cc-img]][cc]
+[![Coverage][coverage-img]][coverage]
+[![Inline docs][inch-img]][inch]
+
 A Ruby implementation of the [Matrix][matrix] API.
 
 ## License
@@ -61,3 +68,16 @@ Bug reports and pull requests are welcome on [GitHub][issues].
 [issues]: https://github.com/Sharparam/chatrix/issues
 [matrix]: http://matrix.org
 [license-url]: http://opensource.org/licenses/MIT
+
+[gem-badge]: https://badge.fury.io/rb/chatrix
+[gem-badge-img]: https://badge.fury.io/rb/chatrix.svg
+[gemnasium]: https://gemnasium.com/github.com/Sharparam/chatrix
+[gemnasium-img]: https://gemnasium.com/badges/github.com/Sharparam/chatrix.svg
+[travis]: https://travis-ci.org/Sharparam/chatrix
+[travis-img]: https://travis-ci.org/Sharparam/chatrix.svg?branch=master
+[cc]: https://codeclimate.com/github/Sharparam/chatrix
+[cc-img]: https://codeclimate.com/github/Sharparam/chatrix/badges/gpa.svg
+[coverage]: https://codeclimate.com/github/Sharparam/chatrix/coverage
+[coverage-img]: https://codeclimate.com/github/Sharparam/chatrix/badges/coverage.svg
+[inch]: http://inch-ci.org/github/Sharparam/chatrix
+[inch-img]: http://inch-ci.org/github/Sharparam/chatrix.svg?branch=master
