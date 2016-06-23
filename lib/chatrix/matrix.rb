@@ -321,6 +321,8 @@ module Chatrix
     #   @param type [String] The type of state to get.
     #   @param key [String] The key of the state to look up.
     #   @return [Hash] Information about the requested state.
+    #
+    # rubocop:disable MethodLength
     def get_room_state(room, type = nil, key = nil)
       room = get_room_id room if room.start_with? '#'
 
@@ -335,6 +337,7 @@ module Chatrix
         make_request(:get, "/rooms/#{room}/state").parsed_response
       end
     end
+    # rubocop:enable MethodLength
 
     # Sends a message to the server informing it about a user having started
     # or stopped typing.
@@ -376,6 +379,8 @@ module Chatrix
     #   the request is aborted.
     # @return [Hash] The initial snapshot of the state (if no `since` value
     #   was provided), or a delta to use for updating state.
+    #
+    # rubocop:disable MethodLength
     def sync(filter: nil, since: nil, full_state: false,
              set_presence: true, timeout: 30_000)
       options = { full_state: full_state }
@@ -392,6 +397,7 @@ module Chatrix
 
       make_request(:get, '/sync', params: options).parsed_response
     end
+    # rubocop:enable MethodLength
 
     # Joins a room on the homeserver.
     #
