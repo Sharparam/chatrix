@@ -10,7 +10,6 @@ end
 group :test do
   gem 'rake', '~> 11.0'
   gem 'rspec', '~> 3.0'
-  #gem 'webmock', '~> 2.1', require: false
   gem 'codeclimate-test-reporter', '~> 0.5', require: false
 end
 
