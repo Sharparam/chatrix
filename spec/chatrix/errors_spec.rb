@@ -1,5 +1,5 @@
 describe Chatrix::RequestError do
-  let(:response) { { 'errcode' => 666, 'error' => 'my error' } }
+  let(:response) { { 'errcode' => 'M_SOME_ERR', 'error' => 'my error' } }
   let(:error) { Chatrix::RequestError.new response }
 
   it 'should set the correct error code' do
