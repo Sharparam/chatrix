@@ -37,7 +37,7 @@ module Chatrix
     def initialize(error)
       super error
 
-      @retry_delay = error['retry_after_ms'] if error.has_key? 'retry_after_ms'
+      @retry_delay = error['retry_after_ms'] if error.key? 'retry_after_ms'
     end
   end
 
