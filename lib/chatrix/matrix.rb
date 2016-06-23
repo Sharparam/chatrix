@@ -721,7 +721,8 @@ module Chatrix
       when 404 # Not found
         raise NotFoundError, 'The specified resource could not be found'
       when 429 # Rate limiting
-        raise RateLimitError.new(response.parsed_response)
+        raise RateLimitError.new(response.parsed_response),
+              'The request was rate limited'
       else
         if %w{(errcode), (error)}.all? { |k| response.include? k }
           raise RequestError.new(response.parsed_response), 'Request failed'
