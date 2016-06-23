@@ -35,10 +35,15 @@ in the `Matrix` class. Example usage:
 # Uses the standard matrix.org homeserver
 rat = Ratrix::Matrix.new 'my secret token'
 
+# Join may raise ForbiddenError if client does not have permission
+# to join the room
 if id = rat.join '#myroom:myserver.org'
   rat.send_message id, 'Hello everyone!'
 end
 ```
+
+Currently there is no asynchronous calls or built-in handling of
+rate-limiting.
 
 ## Development
 
