@@ -9,8 +9,15 @@ module Chatrix
 
   # Error raised when a request is badly formatted.
   class RequestError < ApiError
+    # @!attribute [r] code
+    #   @return [String] The type of error.
+    # @!attribute [r] api_message
+    #   @return [String] The error message returned from the server.
     attr_reader :code, :api_message
 
+    # Initializes a new RequestError instance.
+    #
+    # @param error [Hash{String=>String}] The error response object.
     def initialize(error)
       @code = error['errcode']
       @api_message = error['error']
@@ -27,8 +34,13 @@ module Chatrix
 
   # Raised when a user is not found.
   class UserNotFoundError < NotFoundError
+    # @!attribute [r] username
+    #   @return [String] The name of the user that was not found.
     attr_reader :username
 
+    # Initializes a new UserNotFoundError instance.
+    #
+    # @param username [String] The user that wasn't found.
     def initialize(username)
       @username = username
     end
@@ -36,8 +48,13 @@ module Chatrix
 
   # Raised when a user's avatar is not found.
   class AvatarNotFoundError < NotFoundError
+    # @!attribute [r] username
+    #   @return [String] The user whose avatar was not found.
     attr_reader :username
 
+    # Initializes a new AvatarNotFoundError instance.
+    #
+    # @param username [String] Name of the user whose avatar was not found.
     def initialize(username)
       @username = username
     end
@@ -45,8 +62,13 @@ module Chatrix
 
   # Raised when a room is not found.
   class RoomNotFoundError < NotFoundError
+    # @!attribute [r] room
+    #   @return [String] The room that was not found.
     attr_reader :room
 
+    # Initializes a new RoomNotFoundError instance.
+    #
+    # @param room [String] Name of the room that was not found.
     def initialize(room)
       @room = room
     end
