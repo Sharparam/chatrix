@@ -720,6 +720,8 @@ module Chatrix
         raise ForbiddenError, 'You do not have access to that resource'
       when 404 # Not found
         raise NotFoundError, 'The specified resource could not be found'
+      when 429 # Rate limiting
+        raise RateLimitError.new(response.parsed_response)
       else
         if %w{(errcode), (error)}.all? { |k| response.include? k }
           raise RequestError.new(response.parsed_response), 'Request failed'

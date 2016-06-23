@@ -24,6 +24,23 @@ module Chatrix
     end
   end
 
+  # Error raised when the API request limit is reached.
+  class RateLimitError < RequestError
+    # @!attribute [r] retry_delay
+    #   @return [Fixnum,nil] Number of milliseconds to wait before attempting
+    #     this request again. If no delay was provided this will be `nil`.
+    attr_reader :retry_delay
+
+    # Initializes a new RateLimitError instance.
+    #
+    # @param error [Hash] The error response object.
+    def initialize(error)
+      super error
+
+      @retry_delay = error['retry_after_ms'] if error.has_key? 'retry_after_ms'
+    end
+  end
+
   # Raised when a resource is requested that the user does not have access to.
   class ForbiddenError < ApiError
   end
