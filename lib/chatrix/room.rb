@@ -38,6 +38,8 @@ module Chatrix
       process_timeline data['timeline'] if data.key? 'timeline'
     end
 
+    private
+
     def process_state(data)
       return unless data.key? 'events'
       data['events'].each { |e| process_state_event e }
