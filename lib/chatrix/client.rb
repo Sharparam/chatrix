@@ -55,6 +55,8 @@ module Chatrix
       return unless events.is_a? Hash
       @since = events['next_batch']
       broadcast(:sync, events)
+
+      @rooms.process_events events['rooms'] if events.key? 'rooms'
     end
   end
 end
