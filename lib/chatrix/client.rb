@@ -32,9 +32,7 @@ module Chatrix
 
       @rooms.on(:added) do |room|
         broadcast(:room_added, room)
-        room.on(:message) { |r, s, m| broadcast(:room_message, r, s, m) }
-        room.on(:notice) { |r, s, m| broadcast(:room_notice, r, s, m) }
-        room.on(:emote) { |r, s, m| broadcast(:room_emote, r, s, m) }
+        room.on(:message) { |r, m| broadcast(:room_message, r, m) }
       end
     end
 
