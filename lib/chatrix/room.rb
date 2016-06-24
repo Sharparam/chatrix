@@ -25,6 +25,14 @@ module Chatrix
       @matrix.send_message @id, message
     end
 
+    def send_notice(message)
+      @matrix.send_notice @id, message
+    end
+
+    def send_emote(message)
+      @matrix.send_emote @id, message
+    end
+
     def process_join(data)
       process_state data['state'] if data.key? 'state'
       process_timeline data['timeline'] if data.key? 'timeline'
