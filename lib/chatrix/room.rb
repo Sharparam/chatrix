@@ -13,7 +13,7 @@ module Chatrix
     @@log = Logger.new $stdout
 
     def initialize(id, matrix)
-      super
+      super()
 
       @id = id
       @aliases = []
