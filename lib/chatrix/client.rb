@@ -43,6 +43,10 @@ module Chatrix
       @sync_thread = nil
     end
 
+    def get_user(id)
+      @users[id]
+    end
+
     def get_room(id)
       @rooms[id]
     end
