@@ -40,6 +40,7 @@ module Chatrix
     def get_room(id)
       return @rooms[id] if @rooms.key? id
       room = Room.new id, @matrix
+      @rooms[id] = room
       broadcast(:added, room)
       room
     end
