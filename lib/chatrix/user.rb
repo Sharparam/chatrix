@@ -1,3 +1,5 @@
+require 'chatrix/event_processor'
+
 require 'wisper'
 
 module Chatrix
