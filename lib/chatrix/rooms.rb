@@ -22,11 +22,11 @@ module Chatrix
       return @rooms[id] if id.start_with? '!'
 
       if id.start_with? '#'
-        res = @rooms.find { |i, r| r.alias == id }
+        res = @rooms.find { |_, r| r.alias == id }
         return res.last if res.respond_to? :last
       end
 
-      res = @rooms.find { |i, r| r.name == id }
+      res = @rooms.find { |_, r| r.name == id }
       res.last if res.respond_to? :last
     end
 

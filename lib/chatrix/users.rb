@@ -16,7 +16,7 @@ module Chatrix
     def [](id)
       return @users[id] if id.start_with? '@'
 
-      res = @users.find { |i, u| u.displayname == id }
+      res = @users.find { |_, u| u.displayname == id }
       res.last if res.respond_to? :last
     end
 
