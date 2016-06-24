@@ -1,6 +1,7 @@
 require 'chatrix/event_processor'
-require 'chatrix/permissions'
 require 'chatrix/message'
+
+require 'chatrix/components/permissions'
 
 require 'logger'
 require 'set'
