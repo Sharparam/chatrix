@@ -38,6 +38,10 @@ module Chatrix
       @sync_thread = nil
     end
 
+    def get_room(id)
+      @rooms[id]
+    end
+
     private
 
     def sync!
