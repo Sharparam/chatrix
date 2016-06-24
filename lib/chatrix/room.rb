@@ -11,6 +11,23 @@ module Chatrix
   class Room < EventProcessor
     include Wisper::Publisher
 
+    # Handlers for state events.
+    STATE_HANDLERS = {
+      'm.room.create' =>
+        ['creator', -> (val) { @creator = @users.send(:get_user, val) }],
+      'm.room.canonical_alias' => ['alias', -> (val) { @alias = val }],
+      'm.room.aliases' => ['aliases', -> (val) { @aliases.replace val }],
+      'm.room.name' => ['name', -> (val) { @name = val }],
+      'm.room.topic' => ['topic', -> (val) { @topic = val }],
+      'm.room.guest_access' =>
+        ['guest_access', -> (val) { @guest_access = val == 'can_join' }],
+      'm.room.history_visibility' =>
+        ['history_visibility', -> (val) { @history_visibility = val }],
+      'm.room.join_rules' => ['join_rule', -> (val) { @join_rule = val }],
+      'm.room.power_levels' => -> (event) { process_power_levels event },
+      'm.room.member' => -> (event) { process_member_event event }
+    }.freeze
+
     # @!attribute [r] id
     #   @return [String] The ID of this room.
     # @!attribute [r] alias
@@ -146,35 +163,11 @@ module Chatrix
 
       broadcast(:state, self, event)
 
-      case event['type']
-      when 'm.room.create'
-        @creator = @users.send(:get_user, event['content']['creator'])
-        broadcast(:creator, self, @creator)
-      when 'm.room.member'
-        process_member_event event
-      when 'm.room.canonical_alias'
-        @alias = event['content']['alias']
-        broadcast(:alias, self, @alias)
-      when 'm.room.aliases'
-        @aliases.replace event['content']['aliases']
-        broadcast(:aliases, self, @aliases.dup)
-      when 'm.room.name'
-        @name = event['content']['name']
-        broadcast(:name, self, @name)
-      when 'm.room.topic'
-        @topic = event['content']['topic']
-        broadcast(:topic, self, @topic)
-      when 'm.room.power_levels'
-        process_power_levels_event event
-      when 'm.room.guest_access'
-        @guest_access = event['content']['guest_access'] == 'can_join'
-        broadcast(:guest_access, self, @guest_access)
-      when 'm.room.history_visibility'
-        @history_visibility = event['content']['history_visibility']
-        broadcast(:history_visibility, self, @history_visibility)
-      when 'm.room.join_rules'
-        @join_rule = event['content']['join_rule']
-        broadcast(:join_rule, self, @join_rule)
+      case h = STATE_HANDLERS[event['type']]
+      when Proc
+        h.call event
+      when Array
+        broadcast h.first, self, h.last.call(event['content'][h.first])
       end
 
       processed event
