@@ -3,6 +3,7 @@ require 'chatrix/user'
 require 'wisper'
 
 module Chatrix
+  # Manages the users known to the client.
   class Users
     include Wisper::Publisher
 

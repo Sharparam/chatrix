@@ -6,6 +6,7 @@ require 'set'
 require 'wisper'
 
 module Chatrix
+  # Provides functionality for interacting with a room.
   class Room < EventProcessor
     include Wisper::Publisher
 

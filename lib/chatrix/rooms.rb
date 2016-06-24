@@ -3,6 +3,7 @@ require 'chatrix/room'
 require 'wisper'
 
 module Chatrix
+  # Manages the rooms known to the client.
   class Rooms
     include Wisper::Publisher
 

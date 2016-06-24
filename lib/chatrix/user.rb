@@ -3,6 +3,7 @@ require 'chatrix/event_processor'
 require 'wisper'
 
 module Chatrix
+  # Describes a user
   class User < EventProcessor
     include Wisper::Publisher
 

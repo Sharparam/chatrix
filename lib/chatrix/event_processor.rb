@@ -1,4 +1,5 @@
 module Chatrix
+  # Keeps track of what events have already been processed.
   class EventProcessor
     def initialize
       @processed = []

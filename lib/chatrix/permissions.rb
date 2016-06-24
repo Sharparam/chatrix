@@ -1,4 +1,5 @@
 module Chatrix
+  # Helper for parsing permissions in a room.
   class Permissions
     def initialize(room)
       @room = room
