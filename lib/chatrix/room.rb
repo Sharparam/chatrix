@@ -116,16 +116,15 @@ module Chatrix
     def process_member_event(event)
       @users.process_member_event self, event
       user = @users[event['sender']]
-      case event['membership']
-      when 'join'
+      membership = event['membership'].to_sym
+
+      if membership == :join
         @members.add user
-        broadcast(:join, self, user)
-      when 'invite'
-        broadcast(:invite, self, user)
       else
         @members.delete user
-        broadcast(:leave, self, user)
       end
+
+      broadcast(membership, self, user)
     end
 
     def process_power_levels_event(event)
