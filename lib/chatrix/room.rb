@@ -150,8 +150,7 @@ module Chatrix
     # Process state events.
     # @param data [Hash] Events to process.
     def process_state(data)
-      return unless data.key? 'events'
-      data['events'].each { |e| process_state_event e }
+      data['events'].each { |e| process_state_event e } if data.key? 'events'
     end
 
     # Process timeline events.
