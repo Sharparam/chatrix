@@ -9,19 +9,26 @@ module Chatrix
   class Client
     include Wisper::Publisher
 
+    # @!attribute [r] me
+    #   @return [User] The user associated with the access token.
+    attr_reader :me
+
     # Initializes a new Client instance.
     #
     # Currently it requires a token, future versions will allow login
     # with arbitrary details.
     #
     # @param token [String] The access token to use.
+    # @param id [String] The user ID of the token owner.
     # @param homeserver [String,nil] Homeserver to connect to. If not set,
     #   the default homeserver defined in Chatrix::Matrix will be used.
-    def initialize(token, homeserver: nil)
+    def initialize(token, id, homeserver: nil)
       @matrix = Matrix.new token, homeserver
 
       @users = Users.new
       @rooms = Rooms.new @users, @matrix
+
+      @me = @users.send(:get_user, id)
 
       @rooms.on(:added) do |room|
         broadcast(:room_added, room)
