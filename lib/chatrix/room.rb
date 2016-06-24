@@ -44,6 +44,12 @@ module Chatrix
     def process_leave(data)
     end
 
+    def to_s
+      return @name if @name
+      return @alias if @alias
+      @id
+    end
+
     private
 
     def process_state(data)
