@@ -38,6 +38,12 @@ module Chatrix
       process_timeline data['timeline'] if data.key? 'timeline'
     end
 
+    def process_invite(data)
+    end
+
+    def process_leave(data)
+    end
+
     private
 
     def process_state(data)
