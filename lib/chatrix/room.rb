@@ -135,9 +135,7 @@ module Chatrix
     #   If it has a canonical alias, the alias is returned.
     #   If it has neither a name nor alias, the room ID is returned.
     def to_s
-      return @name if @name
-      return @alias if @alias
-      @id
+      @name || @alias || @id
     end
 
     private
