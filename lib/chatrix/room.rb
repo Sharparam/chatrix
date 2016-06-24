@@ -75,14 +75,28 @@ module Chatrix
       @matrix.send_emote @id, message
     end
 
+    # Check if a user can perform an action in this room.
+    #
+    # @param user [User] The user to test.
+    # @param action [Symbol] The action to check.
+    # @return [Boolean] `true` if the user can perform the action,
+    #   otherwise `false`.
     def can?(user, action)
       @permissions.can? user, action
     end
 
+    # Check if a user can set an event in this room.
+    #
+    # @param user [User] The user to test.
+    # @param event [Symbol] The event to check.
+    # @return [Boolean] `true` if the user can set the event,
+    #   otherwise `false`.
     def can_set?(user, event)
       @permissions.can_set? user, event
     end
 
+    # Process join events for this room.
+    # @param data [Hash] Event data containing state and timeline events.
     def process_join(data)
       process_state data['state'] if data.key? 'state'
       process_timeline data['timeline'] if data.key? 'timeline'
@@ -94,6 +108,10 @@ module Chatrix
     def process_leave(data)
     end
 
+    # Gets a string representation of this room.
+    # @return [String] If the room has a name, that name is returned.
+    #   If it has a canonical alias, the alias is returned.
+    #   If it has neither a name nor alias, the room ID is returned.
     def to_s
       return @name if @name
       return @alias if @alias
@@ -102,16 +120,22 @@ module Chatrix
 
     private
 
+    # Process state events.
+    # @param data [Hash] Events to process.
     def process_state(data)
       return unless data.key? 'events'
       data['events'].each { |e| process_state_event e }
     end
 
+    # Process timeline events.
+    # @param data [Hash] Events to process.
     def process_timeline(data)
       return unless data.key? 'events'
       data['events'].each { |e| process_timeline_event e }
     end
 
+    # Process a state event.
+    # @param event [Hash] The event to process.
     def process_state_event(event)
       return if processed? event
 
@@ -151,6 +175,8 @@ module Chatrix
       processed event
     end
 
+    # Process a member event.
+    # @param event [Hash] The member event.
     def process_member_event(event)
       @users.process_member_event self, event
       user = @users[event['sender']]
@@ -165,6 +191,8 @@ module Chatrix
       broadcast(membership, self, user)
     end
 
+    # Process a power level event.
+    # @param event [Hash] Event data.
     def process_power_levels_event(event)
       content = event['content']
       @permissions.update content
@@ -172,6 +200,8 @@ module Chatrix
       @users.process_power_levels self, content['users']
     end
 
+    # Process a timeline event.
+    # @param event [Hash] Event data.
     def process_timeline_event(event)
       return if processed? event
 
@@ -187,6 +217,8 @@ module Chatrix
       processed event
     end
 
+    # Process a message event.
+    # @param event [Hash] Event data.
     def process_message_event(event)
       message = Message.new @users[event['sender']], event['content']
       broadcast(:message, self, message)
