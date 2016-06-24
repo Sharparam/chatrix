@@ -12,13 +12,13 @@ module Chatrix
     # Debugging
     @@log = Logger.new $stdout
 
-    def initialize(id, matrix)
+    def initialize(id, users, matrix)
       super()
 
       @id = id
       @aliases = []
+      @users = users
       @matrix = matrix
-      @members = {}
     end
 
     def send_message(message)
@@ -66,6 +66,8 @@ module Chatrix
       return if processed? event
 
       case event['type']
+      when 'm.room.member'
+        @users.process_member_event self, event
       when 'm.room.canonical_alias'
         @alias = event['content']['alias']
         broadcast(:alias, self, @alias)
@@ -88,19 +90,41 @@ module Chatrix
     def process_timeline_event(event)
       return if processed? event
 
-      @@log.debug { "Processing timeline event: #{event}" }
-
       case event['type']
       when 'm.room.message'
-        message = event['content']['body']
-        sender = event['sender']
-        broadcast(:message, sender, message)
+        process_message_event event
       when 'm.room.member'
-        @members[event['sender']] = event['content']['membership']
-        broadcast(:user_update, event['sender'])
+        @users.process_member_event self, event
+      else
+        @@log.debug(:timeline) { "Unhandled event: #{event}" }
       end
 
       processed event
+    end
+
+    def process_message_event(event)
+      type = event['content']['msgtype']
+      body = event['content']['body']
+      sender = @users[event['sender']]
+
+      case type
+      when 'm.emote'
+        broadcast(:emote, self, sender, body)
+      when 'm.notice'
+        broadcast(:notice, self, sender, body)
+      else
+        if event['content'].key? 'format'
+          case event['content']['format']
+          when 'org.matrix.custom.html'
+            broadcast(:html, self, sender,
+                      event['content']['formatted_body'], body)
+          else
+            broadcast(:message, self, sender, body)
+          end
+        else
+          broadcast(:message, self, sender, body)
+        end
+      end
     end
   end
 end

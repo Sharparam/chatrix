@@ -1,4 +1,5 @@
 require 'chatrix/matrix'
+require 'chatrix/users'
 require 'chatrix/rooms'
 
 require 'wisper'
@@ -19,11 +20,15 @@ module Chatrix
     def initialize(token, homeserver: nil)
       @matrix = Matrix.new token, homeserver
 
-      @rooms = Rooms.new @matrix
+      @users = Users.new @matrix
+
+      @rooms = Rooms.new @users, @matrix
 
       @rooms.on(:added) do |room|
         broadcast(:room_added, room)
-        room.on(:message) { |s, m| broadcast(:room_message, room, s, m) }
+        room.on(:message) { |r, s, m| broadcast(:room_message, r, s, m) }
+        room.on(:notice) { |r, s, m| broadcast(:room_notice, r, s, m) }
+        room.on(:emote) { |r, s, m| broadcast(:room_emote, r, s, m) }
       end
     end
 

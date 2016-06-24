@@ -6,8 +6,10 @@ module Chatrix
   class Rooms
     include Wisper::Publisher
 
-    def initialize(matrix)
+    def initialize(users, matrix)
       @matrix = matrix
+
+      @users = users
 
       # room_id => room
       @rooms = {}
@@ -39,7 +41,7 @@ module Chatrix
 
     def get_room(id)
       return @rooms[id] if @rooms.key? id
-      room = Room.new id, @matrix
+      room = Room.new id, @users, @matrix
       @rooms[id] = room
       broadcast(:added, room)
       room
