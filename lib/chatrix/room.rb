@@ -7,7 +7,7 @@ module Chatrix
   class Room < EventProcessor
     include Wisper::Publisher
 
-    attr_reader :id
+    attr_reader :id, :alias, :name, :topic
 
     # Debugging
     @@log = Logger.new $stdout
@@ -16,6 +16,7 @@ module Chatrix
       super
 
       @id = id
+      @aliases = []
       @matrix = matrix
       @members = {}
     end
@@ -42,12 +43,23 @@ module Chatrix
     def process_state_event(event)
       return if processed? event
 
-      @@log.debug { "Processing state event: #{event}" }
+      case event['type']
+      when 'm.room.canonical_alias'
+        @alias = event['content']['alias']
+        broadcast(:alias, self, @alias)
+      when 'm.room.aliases'
+        @aliases.replace event['content']['aliases']
+        broadcast(:aliases, self, @aliases.dup)
+      when 'm.room.name'
+        @name = event['content']['name']
+        broadcast(:name, self, @name)
+      when 'm.room.topic'
+        @topic = event['content']['topic']
+        broadcast(:topic, self, @topic)
+      else
+        @@log.debug(:state) { "Unhandled event: #{event}" }
+      end
 
-      return unless event['type'] == 'm.room.member'
-
-      @members[event['sender']] = event['content']['membership']
-      broadcast(:user_update, event['sender'])
       processed event
     end
 

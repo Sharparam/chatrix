@@ -13,11 +13,19 @@ module Chatrix
       @rooms = {}
     end
 
-    # Gets a room by its ID.
+    # Gets a room by its ID, alias, or name.
     #
     # If the room has not been discovered, returns `nil`.
     def [](id)
-      @rooms[id]
+      return @rooms[id] if id.start_with? '!'
+
+      if id.start_with? '#'
+        res = @rooms.find { |i, r| r.alias == id }
+        return res.last if res.respond_to? :last
+      end
+
+      res = @rooms.find { |i, r| r.name == id }
+      res.last if res.respond_to? :last
     end
 
     # Processes a list of room events from syncs
