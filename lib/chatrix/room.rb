@@ -1,7 +1,9 @@
 require 'chatrix/event_processor'
 require 'chatrix/message'
 
+require 'chatrix/components/messaging'
 require 'chatrix/components/permissions'
+require 'chatrix/components/admin'
 
 require 'logger'
 require 'set'
@@ -55,8 +57,13 @@ module Chatrix
     #   @return [String] This room's history visibility.
     # @!attribute [r] join_rule
     #   @return [String] Join rules for this room.
+    # @!attribute [r] admin
+    #   @return [Admin] Administration object for carrying out administrative
+    #     actions like kicking and banning of users.
+    # @!attribute [r] messaging
+    #   @return [Messaging] Handle various message actions through this object.
     attr_reader :id, :alias, :name, :topic, :creator, :guest_access,
-                :history_visibility, :join_rule
+                :history_visibility, :join_rule, :admin, :messaging
 
     # Initializes a new Room instance.
     #
@@ -73,30 +80,8 @@ module Chatrix
       @members = Set.new
 
       @permissions = Permissions.new self
-    end
-
-    # Sends a message to this channel.
-    #
-    # @param message [String] The message to send.
-    # @return [String] Event ID for the send action.
-    def send_message(message)
-      @matrix.send_message @id, message
-    end
-
-    # Sends a notice to this channel.
-    #
-    # @param message [String] The notice to send.
-    # @return (see #send_message)
-    def send_notice(message)
-      @matrix.send_notice @id, message
-    end
-
-    # Sends an emote to this channel.
-    #
-    # @param message [String] The emote text to send.
-    # @return (see #send_message)
-    def send_emote(message)
-      @matrix.send_emote @id, message
+      @messaging = Messaging.new self, matrix
+      @admin = Admin.new self, matrix
     end
 
     # Check if a user can perform an action in this room.
