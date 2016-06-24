@@ -16,15 +16,10 @@ module Chatrix
     private
 
     def parse_event(event)
-      case event
-      when String
+      if event.is_a? String
         event
-      when Hash
-        if event.key? 'event_id'
-          event['event_id']
-        else
-          raise ArgumentError, 'event hash is missing event_id value'
-        end
+      elsif event.is_a?(Hash) && event.key?('event_id')
+        event['event_id']
       else
         raise ArgumentError, 'Invalid event object'
       end
