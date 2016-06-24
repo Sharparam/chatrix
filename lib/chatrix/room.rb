@@ -1,6 +1,7 @@
 require 'chatrix/event_processor'
 
 require 'logger'
+require 'set'
 require 'wisper'
 
 module Chatrix
@@ -19,6 +20,7 @@ module Chatrix
       @aliases = []
       @users = users
       @matrix = matrix
+      @members = Set.new
     end
 
     def send_message(message)
@@ -70,7 +72,7 @@ module Chatrix
         @creator = event['content']['creator']
         broadcast(:creator, self, @creator)
       when 'm.room.member'
-        @users.process_member_event self, event
+        process_member_event event
       when 'm.room.canonical_alias'
         @alias = event['content']['alias']
         broadcast(:alias, self, @alias)
@@ -83,11 +85,33 @@ module Chatrix
       when 'm.room.topic'
         @topic = event['content']['topic']
         broadcast(:topic, self, @topic)
+      when 'm.room.power_levels'
+        process_power_levels_event event
       else
         @@log.debug(:state) { "Unhandled event: #{event}" }
       end
 
       processed event
+    end
+
+    def process_member_event(event)
+      @users.process_member_event self, event
+      user = @users[event['sender']]
+      case event['membership']
+      when 'join'
+        @members.add user
+        broadcast(:join, self, user)
+      when 'invite'
+        broadcast(:invite, self, user)
+      else
+        @members.delete user
+        broadcast(:leave, self, user)
+      end
+    end
+
+    def process_power_levels_event(event)
+      content = event['content']
+      @users.process_power_levels self, content['users']
     end
 
     def process_timeline_event(event)

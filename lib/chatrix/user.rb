@@ -18,9 +18,11 @@ module Chatrix
       @memberships = {}
     end
 
-    def to_s
-      return @displayname if @displayname
-      @id
+    def power_in(room)
+      return 0 unless @memberships.key? room
+      @memberships[room][:power] || 0
+    end
+
     end
 
     def process_member_event(room, event)
@@ -28,13 +30,26 @@ module Chatrix
 
       content = event['content']
 
-      @memberships[room.id] = content['membership']
-      broadcast(:membership, self, room, content['membership'])
+      membership = (@memberships[room] ||= {})
+      membership[:type] = content['membership']
+
+      broadcast(:membership, self, room, membership)
 
       update_avatar(content['avatar_url']) if content.key? 'avatar_url'
       update_displayname(content['displayname']) if content.key? 'displayname'
 
       processed event
+    end
+
+    def process_power_level(room, level)
+      membership = (@memberships[room] ||= {})
+      membership[:power] = level
+      broadcast(:membership, self, room, membership)
+    end
+
+    def to_s
+      return @displayname if @displayname
+      @id
     end
 
     private

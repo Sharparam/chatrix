@@ -24,6 +24,12 @@ module Chatrix
       get_user(event['sender']).process_member_event room, event
     end
 
+    def process_power_levels(room, data)
+      data.each do |id, level|
+        get_user(id).process_power_level room, level
+      end
+    end
+
     private
 
     def get_user(id)
