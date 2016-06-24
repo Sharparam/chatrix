@@ -1,5 +1,6 @@
 require 'chatrix/event_processor'
 require 'chatrix/permissions'
+require 'chatrix/message'
 
 require 'logger'
 require 'set'
@@ -150,28 +151,8 @@ module Chatrix
     end
 
     def process_message_event(event)
-      type = event['content']['msgtype']
-      body = event['content']['body']
-      sender = @users[event['sender']]
-
-      case type
-      when 'm.emote'
-        broadcast(:emote, self, sender, body)
-      when 'm.notice'
-        broadcast(:notice, self, sender, body)
-      else
-        if event['content'].key? 'format'
-          case event['content']['format']
-          when 'org.matrix.custom.html'
-            broadcast(:html, self, sender,
-                      event['content']['formatted_body'], body)
-          else
-            broadcast(:message, self, sender, body)
-          end
-        else
-          broadcast(:message, self, sender, body)
-        end
-      end
+      message = Message.new @users[event['sender']], event['content']
+      broadcast(:message, self, message)
     end
   end
 end
