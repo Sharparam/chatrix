@@ -47,8 +47,8 @@ module Chatrix
     def sync!
       events = @matrix.sync since: @since
       process_sync events
-    #rescue ApiError => err
-    #  broadcast(:sync_error, err)
+    rescue ApiError => err
+      broadcast(:sync_error, err)
     end
 
     def process_sync(events)
