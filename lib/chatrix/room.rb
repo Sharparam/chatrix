@@ -7,7 +7,7 @@ module Chatrix
   class Room < EventProcessor
     include Wisper::Publisher
 
-    attr_reader :id, :alias, :name, :topic
+    attr_reader :id, :alias, :name, :topic, :creator
 
     # Debugging
     @@log = Logger.new $stdout
@@ -66,6 +66,9 @@ module Chatrix
       return if processed? event
 
       case event['type']
+      when 'm.room.create'
+        @creator = event['content']['creator']
+        broadcast(:creator, self, @creator)
       when 'm.room.member'
         @users.process_member_event self, event
       when 'm.room.canonical_alias'
