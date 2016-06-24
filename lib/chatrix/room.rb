@@ -1,4 +1,5 @@
 require 'chatrix/event_processor'
+require 'chatrix/permissions'
 
 require 'logger'
 require 'set'
@@ -22,6 +23,8 @@ module Chatrix
       @users = users
       @matrix = matrix
       @members = Set.new
+
+      @permissions = Permissions.new self
     end
 
     def send_message(message)
@@ -34,6 +37,14 @@ module Chatrix
 
     def send_emote(message)
       @matrix.send_emote @id, message
+    end
+
+    def can?(user, action)
+      @permissions.can? user, action
+    end
+
+    def can_set?(user, event)
+      @permissions.can_set? user, event
     end
 
     def process_join(data)
@@ -121,6 +132,8 @@ module Chatrix
 
     def process_power_levels_event(event)
       content = event['content']
+      @permissions.update content
+      broadcast(:permissions, self)
       @users.process_power_levels self, content['users']
     end
 

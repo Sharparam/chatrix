@@ -23,6 +23,12 @@ module Chatrix
       @memberships[room][:power] || 0
     end
 
+    def can?(action, room)
+      room.can? self, action
+    end
+
+    def can_set?(event, room)
+      room.can_set? self, event
     end
 
     def process_member_event(room, event)
