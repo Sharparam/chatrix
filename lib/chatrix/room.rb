@@ -29,6 +29,12 @@ module Chatrix
       'm.room.member' => -> (event) { process_member_event event }
     }.freeze
 
+    # Handlers for timeline events.
+    TIMELINE_HANDLERS = {
+      'm.room.message' => -> (event) { process_message_event event },
+      'm.room.member' => -> (event) { process_member_event event }
+    }.freeze
+
     # @!attribute [r] id
     #   @return [String] The ID of this room.
     # @!attribute [r] alias
@@ -151,8 +157,7 @@ module Chatrix
     # Process timeline events.
     # @param data [Hash] Events to process.
     def process_timeline(data)
-      return unless data.key? 'events'
-      data['events'].each { |e| process_timeline_event e }
+      data['events'].each { |e| process_timeline_event e } if data.key? 'events'
     end
 
     # Process a state event.
@@ -204,12 +209,7 @@ module Chatrix
 
       broadcast(:timeline, self, event)
 
-      case event['type']
-      when 'm.room.message'
-        process_message_event event
-      when 'm.room.member'
-        process_member_event event
-      end
+      TIMELINE_HANDLERS[event['type']].tap { |h| h.call(event) if h }
 
       processed event
     end
