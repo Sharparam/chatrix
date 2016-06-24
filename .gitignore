@@ -165,3 +165,6 @@ GitHub.sublime-settings
 ### Custom rules ###
 # Ignore access token file
 access_token.txt
+
+# Ignore API dumps
+dumps/
