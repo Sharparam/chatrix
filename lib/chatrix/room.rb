@@ -11,9 +11,34 @@ module Chatrix
   class Room < EventProcessor
     include Wisper::Publisher
 
+    # @!attribute [r] id
+    #   @return [String] The ID of this room.
+    # @!attribute [r] alias
+    #   @return [String,nil] This room's canonical alias, or `nil` if none
+    #     has been set.
+    # @!attribute [r] name
+    #   @return [String,nil] The name of this room, or `nil` if none has
+    #     been set.
+    # @!attribute [r] topic
+    #   @return [String,nil] The topic of this room, or `nil` if none has
+    #     been set.
+    # @!attribute [r] creator
+    #   @return [User] The user who created this room.
+    # @!attribute [r] guest_access
+    #   @return [Boolean] `true` if guests are allowed in this room,
+    #     otherwise `false`.
+    # @!attribute [r] history_visibility
+    #   @return [String] This room's history visibility.
+    # @!attribute [r] join_rule
+    #   @return [String] Join rules for this room.
     attr_reader :id, :alias, :name, :topic, :creator, :guest_access,
                 :history_visibility, :join_rule
 
+    # Initializes a new Room instance.
+    #
+    # @param id [String] The room ID.
+    # @param users [Users] The User manager.
+    # @param matrix [Matrix] The Matrix API instance.
     def initialize(id, users, matrix)
       super()
 
@@ -26,14 +51,26 @@ module Chatrix
       @permissions = Permissions.new self
     end
 
+    # Sends a message to this channel.
+    #
+    # @param message [String] The message to send.
+    # @return [String] Event ID for the send action.
     def send_message(message)
       @matrix.send_message @id, message
     end
 
+    # Sends a notice to this channel.
+    #
+    # @param message [String] The notice to send.
+    # @return (see #send_message)
     def send_notice(message)
       @matrix.send_notice @id, message
     end
 
+    # Sends an emote to this channel.
+    #
+    # @param message [String] The emote text to send.
+    # @return (see #send_message)
     def send_emote(message)
       @matrix.send_emote @id, message
     end

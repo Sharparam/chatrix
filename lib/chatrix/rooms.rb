@@ -7,6 +7,10 @@ module Chatrix
   class Rooms
     include Wisper::Publisher
 
+    # Initializes a new Rooms instance.
+    #
+    # @param users [Users] The User manager.
+    # @param matrix [Matrix] The Matrix API instance.
     def initialize(users, matrix)
       @matrix = matrix
 
@@ -18,7 +22,8 @@ module Chatrix
 
     # Gets a room by its ID, alias, or name.
     #
-    # If the room has not been discovered, returns `nil`.
+    # @return [Room,nil] Returns the room instance if the room was found,
+    #   otherwise ´nil´.
     def [](id)
       return @rooms[id] if id.start_with? '!'
 
@@ -31,7 +36,9 @@ module Chatrix
       res.last if res.respond_to? :last
     end
 
-    # Processes a list of room events from syncs
+    # Processes a list of room events from syncs.
+    #
+    # @param events [Hash] A hash of room events as returned from the server.
     def process_events(events)
       process_join events['join'] if events.key? 'join'
       process_invite events['invite'] if events.key? 'invite'
@@ -40,6 +47,11 @@ module Chatrix
 
     private
 
+    # Gets the Room instance associated with a room ID.
+    # If there is no Room instance for the ID, one is created and returned.
+    #
+    # @param id [String] The room ID to get an instance for.
+    # @return [Room] An instance of the Room class for the specified ID.
     def get_room(id)
       return @rooms[id] if @rooms.key? id
       room = Room.new id, @users, @matrix
@@ -48,18 +60,27 @@ module Chatrix
       room
     end
 
+    # Process `join` room events.
+    #
+    # @param events [Hash{String=>Hash}] Events to process.
     def process_join(events)
       events.each do |room, data|
         get_room(room).process_join data
       end
     end
 
+    # Process `invite` room events.
+    #
+    # @param events [Hash{String=>Hash}] Events to process.
     def process_invite(events)
       events.each do |room, data|
         get_room(room).process_invite data
       end
     end
 
+    # Process `leave` room events.
+    #
+    # @param events [Hash{String=>Hash}] Events to process.
     def process_leave(events)
       events.each do |room, data|
         get_room(room).process_leave data

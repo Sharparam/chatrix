@@ -36,10 +36,15 @@ module Chatrix
       end
     end
 
+    # Starts syncing against the homeserver.
+    #
+    # Launches a new thread that will continously check for new events
+    # from the server.
     def start_syncing
       @sync_thread ||= Thread.new { loop { sync! } }
     end
 
+    # Stops syncing against the homeserver.
     def stop_syncing
       return unless @sync_thread.is_a? Thread
       @sync_thread.exit
@@ -47,16 +52,28 @@ module Chatrix
       @sync_thread = nil
     end
 
+    # Gets the user with the specified ID or display name.
+    #
+    # @return [User,nil] Returns a User object if the user could be found,
+    #   otherwise `nil`.
     def get_user(id)
       @users[id]
     end
 
+    # Gets the room with the specified ID, alias, or name.
+    #
+    # @return [Room,nil] Returns a Room object if the room could be found,
+    #   otherwise `nil`.
     def get_room(id)
       @rooms[id]
     end
 
     private
 
+    # Syncs against the server.
+    #
+    # If an API error occurs during sync, it will be rescued and broadcasted
+    # as `:sync_error`.
     def sync!
       events = @matrix.sync since: @since
       process_sync events
@@ -64,6 +81,9 @@ module Chatrix
       broadcast(:sync_error, err)
     end
 
+    # Process the sync result.
+    #
+    # @param events [Hash] The events to sync.
     def process_sync(events)
       return unless events.is_a? Hash
       @since = events['next_batch']
