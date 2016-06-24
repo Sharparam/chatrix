@@ -23,7 +23,7 @@ module Chatrix
     # Gets a room by its ID, alias, or name.
     #
     # @return [Room,nil] Returns the room instance if the room was found,
-    #   otherwise ´nil´.
+    #   otherwise `nil`.
     def [](id)
       return @rooms[id] if id.start_with? '!'
 
