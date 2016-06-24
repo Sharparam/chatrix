@@ -144,7 +144,7 @@ module Chatrix
       when 'm.room.message'
         process_message_event event
       when 'm.room.member'
-        @users.process_member_event self, event
+        process_member_event event
       end
 
       processed event
