@@ -6,9 +6,7 @@ module Chatrix
   class Users
     include Wisper::Publisher
 
-    def initialize(matrix)
-      @matrix = matrix
-
+    def initialize
       # user_id => user
       @users = {}
     end
@@ -34,7 +32,7 @@ module Chatrix
 
     def get_user(id)
       return @users[id] if @users.key? id
-      user = User.new id, @matrix
+      user = User.new id
       @users[id] = user
       broadcast(:added, user)
       user

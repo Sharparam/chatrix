@@ -20,8 +20,7 @@ module Chatrix
     def initialize(token, homeserver: nil)
       @matrix = Matrix.new token, homeserver
 
-      @users = Users.new @matrix
-
+      @users = Users.new
       @rooms = Rooms.new @users, @matrix
 
       @rooms.on(:added) do |room|

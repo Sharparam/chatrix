@@ -8,11 +8,10 @@ module Chatrix
 
     attr_reader :id, :displayname, :avatar
 
-    def initialize(id, matrix)
+    def initialize(id)
       super()
 
       @id = id
-      @matrix = matrix
 
       # room_id => membership
       @memberships = {}
