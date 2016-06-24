@@ -15,7 +15,7 @@ module Chatrix
     private
 
     def parse_event(event)
-      case event.class
+      case event
       when String
         event
       when Hash
