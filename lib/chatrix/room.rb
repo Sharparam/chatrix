@@ -13,9 +13,6 @@ module Chatrix
     attr_reader :id, :alias, :name, :topic, :creator, :guest_access,
                 :history_visibility, :join_rule
 
-    # Debugging
-    @@log = Logger.new $stdout
-
     def initialize(id, users, matrix)
       super()
 
@@ -80,6 +77,8 @@ module Chatrix
     def process_state_event(event)
       return if processed? event
 
+      broadcast(:state, self, event)
+
       case event['type']
       when 'm.room.create'
         @creator = event['content']['creator']
@@ -109,8 +108,6 @@ module Chatrix
       when 'm.room.join_rules'
         @join_rule = event['content']['join_rule']
         broadcast(:join_rule, self, @join_rule)
-      else
-        @@log.debug(:state) { "Unhandled event: #{event}" }
       end
 
       processed event
@@ -141,13 +138,13 @@ module Chatrix
     def process_timeline_event(event)
       return if processed? event
 
+      broadcast(:timeline, self, event)
+
       case event['type']
       when 'm.room.message'
         process_message_event event
       when 'm.room.member'
         @users.process_member_event self, event
-      else
-        @@log.debug(:timeline) { "Unhandled event: #{event}" }
       end
 
       processed event
