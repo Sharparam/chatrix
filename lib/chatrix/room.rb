@@ -119,7 +119,7 @@ module Chatrix
 
       case event['type']
       when 'm.room.create'
-        @creator = event['content']['creator']
+        @creator = @users.send(:get_user, event['content']['creator'])
         broadcast(:creator, self, @creator)
       when 'm.room.member'
         process_member_event event
