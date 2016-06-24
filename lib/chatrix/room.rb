@@ -8,7 +8,8 @@ module Chatrix
   class Room < EventProcessor
     include Wisper::Publisher
 
-    attr_reader :id, :alias, :name, :topic, :creator
+    attr_reader :id, :alias, :name, :topic, :creator, :guest_access,
+                :history_visibility, :join_rule
 
     # Debugging
     @@log = Logger.new $stdout
@@ -87,6 +88,15 @@ module Chatrix
         broadcast(:topic, self, @topic)
       when 'm.room.power_levels'
         process_power_levels_event event
+      when 'm.room.guest_access'
+        @guest_access = event['content']['guest_access'] == 'can_join'
+        broadcast(:guest_access, self, @guest_access)
+      when 'm.room.history_visibility'
+        @history_visibility = event['content']['history_visibility']
+        broadcast(:history_visibility, self, @history_visibility)
+      when 'm.room.join_rules'
+        @join_rule = event['content']['join_rule']
+        broadcast(:join_rule, self, @join_rule)
       else
         @@log.debug(:state) { "Unhandled event: #{event}" }
       end
