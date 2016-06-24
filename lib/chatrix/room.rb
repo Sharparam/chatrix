@@ -105,7 +105,12 @@ module Chatrix
     def process_invite(data)
     end
 
+    # Process leave events for this room.
+    # @param data [Hash] Event data containing state and timeline events up
+    #   until the point of leaving the room.
     def process_leave(data)
+      process_state data['state'] if data.key? 'state'
+      process_timeline data['timeline'] if data.key? 'timeline'
     end
 
     # Gets a string representation of this room.
