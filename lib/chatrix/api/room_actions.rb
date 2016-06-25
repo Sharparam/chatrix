@@ -121,7 +121,7 @@ module Chatrix
       # @param type [String] The type of message this is.
       #   For example: `'m.text'`, `'m.notice'`, `'m.emote'`.
       # @return (see #send_message_raw)
-      def send_message_type(room, content, type = 'm.text')
+      def send_message(room, content, type = 'm.text')
         send_message_raw room, msgtype: type, body: content
       end
 
