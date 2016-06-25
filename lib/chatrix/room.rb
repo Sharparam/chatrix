@@ -28,10 +28,10 @@ module Chatrix
       @users = users
       @matrix = matrix
 
-      @state = State.new self, @users
-      @timeline = Timeline.new self, @users
-      @messaging = Messaging.new self, @matrix
-      @admin = Admin.new self, @matrix
+      @state = Components::State.new self, @users
+      @timeline = Components::Timeline.new self, @users
+      @messaging = Components::Messaging.new self, @matrix
+      @admin = Components::Admin.new self, @matrix
     end
 
     # Process join events for this room.
