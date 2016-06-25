@@ -176,16 +176,10 @@ module Chatrix
 
     # Parses a filter object for use in a query string.
     # @param filter [String,Hash] The filter object to parse.
-    # @return [String] Query-friendly filter object.
+    # @return [String] Query-friendly filter object. Or the `filter`
+    #   parameter as-is if it failed to parse.
     def parse_filter(filter)
-      case filter
-      when String
-        filter
-      when Hash
-        URI.encode filter.to_json
-      else
-        raise ArgumentError, 'Invalid filter object'
-      end
+      filter.is_a?(Hash) ? URI.encode(filter.to_json) : filter
     end
   end
 end
