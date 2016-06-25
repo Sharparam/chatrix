@@ -10,17 +10,19 @@ module Chatrix
   # Error raised when a request is badly formatted.
   class RequestError < ApiError
     # @!attribute [r] code
-    #   @return [String] The type of error.
+    #   @return [String] The type of error. `'E_UNKNOWN'` if the server
+    #     did not give an error code.
     # @!attribute [r] api_message
     #   @return [String] The error message returned from the server.
+    #     `'Unknown error'` if the server did not give any message.
     attr_reader :code, :api_message
 
     # Initializes a new RequestError instance.
     #
     # @param error [Hash{String=>String}] The error response object.
     def initialize(error)
-      @code = error['errcode']
-      @api_message = error['error']
+      @code = error['errcode'] || 'E_UNKNOWN'
+      @api_message = error['error'] || 'Unknown error'
     end
   end
 
