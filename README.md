@@ -34,7 +34,7 @@ Or install it yourself as:
     $ gem install chatrix
 
 ## Usage
-
+### Using the API class `Chatrix::Matrix`
 This implementation is currently very basic and exposes all the endpoints
 in the `Matrix` class. Example usage:
 
@@ -44,13 +44,58 @@ api = Chatrix::Matrix.new 'my secret token'
 
 # Join may raise ForbiddenError if client does not have permission
 # to join the room
-if id = api.join '#myroom:myserver.org'
-  api.send_message id, 'Hello everyone!'
+if id = api.rooms.actions.join '#myroom:myserver.org'
+  api.rooms.actions.send_message id, 'Hello everyone!'
 end
 ```
 
 Currently there is no asynchronous calls or built-in handling of
 rate-limiting.
+
+### Using the client class `Chatrix::Client`
+The client class works as a wrapper around the raw API calls to make working
+with the API a little easier. It uses the [`wisper`][wisper] gem to broadcast
+state changes.
+
+```ruby
+# When setting up with an access token, there is no way to obtain your own
+# user ID through the API, so it has to be supplied manually.
+client = Chatrix::Client.new 'my token', 'my user id'
+
+# This will spawn a new thread that continously syncs against the homeserver
+# to check for new events. It can be stopped by calling Client#stop_syncing.
+client.start_syncing
+
+# Set up a listener for when a message arrives
+client.on(:room_message) do |room, message|
+  puts "(#{room}) #{message.sender}: #{message.body}"
+end
+
+# We can also listen to messages in a specific room by subscribing to the
+# timeline of that room.
+myroom = client.get_room '#myroom:myserver.org'
+myroom.timeline.on(:message) do |room, message|
+  # Reply with a "Pong!" if someone sends a message starting
+  # with the word "ping", but don't reply to ourselves.
+  if message.body.match(/^\bping\b/i) && message.sender != client.me
+    room.messaging.send_message 'Pong!'
+  end
+end
+
+# Permissions and room actions can be used with relative ease.
+myroom.timeline.on(:message) do |room, message|
+  if message.body.match(/^!kickme$/i) && message.sender != client.me
+    if room.state.permissions.can? message.sender, :kick
+      room.admin.kick message.sender, 'They asked for it'
+    else
+      room.messaging.send_message "You do not have kick privileges, #{message.sender}"
+    end
+  end
+end
+```
+
+When subscribing to an event, make sure to
+[not return inside the block][no-return-blocks].
 
 ## Development
 
@@ -81,3 +126,6 @@ Bug reports and pull requests are welcome on [GitHub][issues].
 [coverage-img]: https://codeclimate.com/github/Sharparam/chatrix/badges/coverage.svg
 [inch]: http://inch-ci.org/github/Sharparam/chatrix
 [inch-img]: http://inch-ci.org/github/Sharparam/chatrix.svg?branch=master
+
+[wisper]: https://github.com/krisleech/wisper
+[no-return-blocks]: http://product.reverb.com/2015/02/28/the-strange-case-of-wisper-and-ruby-blocks-behaving-like-procs/
