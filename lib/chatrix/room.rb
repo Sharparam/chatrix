@@ -41,6 +41,8 @@ module Chatrix
       @timeline.update data['timeline'] if data.key? 'timeline'
     end
 
+    # Process invite events for this room.
+    # @param data [Hash] Event data containing special invite data.
     def process_invite(data)
     end
 
