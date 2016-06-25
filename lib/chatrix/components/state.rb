@@ -28,7 +28,7 @@ module Chatrix
         'm.room.power_levels' => -> (e) { process_power_levels e }
       }.freeze
 
-      # @!attribute [r] alias
+      # @!attribute [r] canonical_alias
       #   @return [String,nil] The canonical alias, or `nil` if none has
       #     been set.
       # @!attribute [r] name
@@ -46,8 +46,8 @@ module Chatrix
       #   @return [String] Join rules for the room.
       # @!attribute [r] permissions
       #   @return [Permissions] Check room permissions.
-      attr_reader :alias, :name, :topic, :creator, :guest_access, :join_rule,
-                  :history_visibility, :permissions
+      attr_reader :canonical_alias, :name, :topic, :creator, :guest_access,
+                  :join_rule, :history_visibility, :permissions
 
       # Initializes a new State instance.
       #
