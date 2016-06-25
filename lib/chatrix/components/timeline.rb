@@ -9,11 +9,6 @@ module Chatrix
     class Timeline
       include Wisper::Publisher
 
-      # Handlers for timeline events.
-      HANDLERS = {
-        'm.room.message' => -> (event) { process_message event }
-      }.freeze
-
       # Initializes a new Timeline instance.
       #
       # @param room [Room] The room this timeline belongs to.
@@ -39,12 +34,13 @@ module Chatrix
       # @param event [Hash] Event data.
       def process_event(event)
         return if Events.processed? event
-        HANDLERS[event['type']].tap { |h| h.call(event) if h }
+        name = 'handle_' + event['type'].match(/\w+$/).to_s
+        send(name, event) if respond_to? name, true
       end
 
       # Process a message event.
       # @param event [Hash] Event data.
-      def process_message(event)
+      def handle_message(event)
         message = Message.new @users[event['sender']], event['content']
         broadcast(:message, @room, message)
         Events.processed event

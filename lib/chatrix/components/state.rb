@@ -11,23 +11,6 @@ module Chatrix
     class State
       include Wisper::Publisher
 
-      # State event handlers.
-      HANDLERS = {
-        'm.room.create' =>
-          ['creator', -> (val) { @creator = @users.send(:get_user, val) }],
-        'm.room.canonical_alias' => ['alias', -> (val) { @alias = val }],
-        'm.room.aliases' => ['aliases', -> (val) { @aliases.replace val }],
-        'm.room.name' => ['name', -> (val) { @name = val }],
-        'm.room.topic' => ['topic', -> (val) { @topic = val }],
-        'm.room.guest_access' =>
-          ['guest_access', -> (val) { @guest_access = val == 'can_join' }],
-        'm.room.history_visibility' =>
-          ['history_visibility', -> (val) { @history_visibility = val }],
-        'm.room.join_rules' => ['join_rule', -> (val) { @join_rule = val }],
-        'm.room.member' => -> (e) { process_member e },
-        'm.room.power_levels' => -> (e) { process_power_levels e }
-      }.freeze
-
       # @!attribute [r] canonical_alias
       #   @return [String,nil] The canonical alias, or `nil` if none has
       #     been set.
@@ -85,19 +68,69 @@ module Chatrix
       def process_event(event)
         return if Events.processed? event
 
-        case h = HANDLERS[event['type']]
-        when Array
-          broadcast h.first, @room, h.last.call(event['content'][h.first])
-        when Proc
-          h.call(event)
-        end
+        name = 'handle_' + event['type'].match(/\w+$/).to_s
+        send(name, event) if respond_to? name, true
 
         Events.processed event
       end
 
+      # Handle the `m.room.create` event.
+      # @param event [Hash] Event data.
+      def handle_create(event)
+        @creator = @users.send(:get_user, event['content']['creator'])
+        broadcast :creator, @room, @creator
+      end
+
+      # Handle the `m.room.canonical_alias` event.
+      # @param (see #handle_create)
+      def handle_canonical_alias(event)
+        @canonical_alias = event['content']['alias']
+        broadcast :canonical_alias, @room, @canonical_alias
+      end
+
+      # Handle the `m.room.aliases` event.
+      # @param (see #handle_create)
+      def handle_aliases(event)
+        @aliases.replace event['content']['aliases']
+        broadcast :aliases, @room, @aliases
+      end
+
+      # Handle the `m.room.name` event.
+      # @param (see #handle_create)
+      def handle_name(event)
+        broadcast :name, @room, @name = event['content']['name']
+      end
+
+      # Handle the `m.room.topic` event.
+      # @param (see #handle_create)
+      def handle_topic(event)
+        broadcast :topic, @room, @topic = event['content']['topic']
+      end
+
+      # Handle the `m.room.guest_access` event.
+      # @param (see #handle_create)
+      def handle_guest_access(event)
+        @guest_access = event['content']['guest_access'] == 'can_join'
+        broadcast :guest_access, @room, @guest_access
+      end
+
+      # Handle the `m.room.history_visibility` event.
+      # @param (see #handle_create)
+      def handle_history_visibility(event)
+        @history_visibility = event['content']['history_visibility']
+        broadcast :history_visibility, @room, @history_visibility
+      end
+
+      # Handle the `m.room.join_rules` event.
+      # @param (see #handle_create)
+      def handle_join_rules(event)
+        @join_rule = event['content']['join_rule']
+        broadcast :join_rule, @room, @join_rule
+      end
+
       # Process a member event.
       # @param event [Hash] The member event.
-      def process_member(event)
+      def handle_member(event)
         @users.process_member_event self, event
         user = @users[event['sender']]
         membership = event['membership'].to_sym
@@ -113,7 +146,7 @@ module Chatrix
 
       # Process a power level event.
       # @param event [Hash] Event data.
-      def process_power_levels(event)
+      def handle_power_levels(event)
         content = event['content']
         @permissions.update content
         @users.process_power_levels @room, content['users']
