@@ -33,6 +33,16 @@ module Chatrix
       delete: -> (path, options, &block) { delete path, options, &block }
     }.freeze
 
+    # Registered request error handlers.
+    ERROR_HANDLERS = {
+      400 => [RequestError, 'Request failed'],
+      403 => [ForbiddenError, 'You do not have access to that resource'],
+      404 => [NotFoundError, 'The resource was not found'],
+      429 => [RateLimitError, 'The request was rate limited']
+    }.tap do |h|
+      h.default = [ApiError, 'An unknown API error occurred.']
+    end.freeze
+
     # Default homeserver used if none is specified.
     DEFAULT_HOMESERVER = 'https://matrix.org'.freeze
 
@@ -704,31 +714,24 @@ module Chatrix
     # @return [HTTParty::Response] The same response object that was passed
     #   in, if the request was successful.
     #
+    # @raise [RequestError] If a `400` response code was returned from the
+    #   request.
     # @raise [ForbiddenError] If a `403` response code was returned from the
     #   request.
     # @raise [NotFoundError] If a `404` response code was returned from the
     #   request.
-    # @raise [RequestError] If an error object was returned from the server.
-    # @raise [ApiError] If an unparsable error was returned from the server.
-    #
-    # rubocop:disable MethodLength
+    # @raise [RateLimitError] If a `429` response code was returned from the
+    #   request.
+    # @raise [ApiError] If an unknown response code was returned from the
+    #   request.
     def parse_response(response)
       case response.code
       when 200 # OK
         response
-      when 403 # Forbidden
-        raise ForbiddenError, 'You do not have access to that resource'
-      when 404 # Not found
-        raise NotFoundError, 'The specified resource could not be found'
-      when 429 # Rate limiting
-        raise RateLimitError.new(response.parsed_response),
-              'The request was rate limited'
       else
-        if %w{(errcode), (error)}.all? { |k| response.include? k }
-          raise RequestError.new(response.parsed_response), 'Request failed'
-        end
+        handler = ERROR_HANDLERS[response.code]
+        raise handler.first.new response.parsed_response, handler.last
 
-        raise ApiError, 'Unknown API error occurred when carrying out request'
       end
     end
   end
