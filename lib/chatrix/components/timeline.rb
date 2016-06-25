@@ -46,7 +46,7 @@ module Chatrix
       # @param event [Hash] Event data.
       def process_message(event)
         message = Message.new @users[event['sender']], event['content']
-        broadcast(:message, self, message)
+        broadcast(:message, @room, message)
         Events.processed event
       end
     end
