@@ -13,19 +13,19 @@ module Chatrix
 
       # State event handlers.
       HANDLERS = {
-        create:
+        'm.room.create' =>
           ['creator', -> (val) { @creator = @users.send(:get_user, val) }],
-        canonical_alias: ['alias', -> (val) { @alias = val }],
-        aliases: ['aliases', -> (val) { @aliases.replace val }],
-        name: ['name', -> (val) { @name = val }],
-        topic: ['topic', -> (val) { @topic = val }],
-        guest_access:
+        'm.room.canonical_alias' => ['alias', -> (val) { @alias = val }],
+        'm.room.aliases' => ['aliases', -> (val) { @aliases.replace val }],
+        'm.room.name' => ['name', -> (val) { @name = val }],
+        'm.room.topic' => ['topic', -> (val) { @topic = val }],
+        'm.room.guest_access' =>
           ['guest_access', -> (val) { @guest_access = val == 'can_join' }],
-        history_visibility:
+        'm.room.history_visibility' =>
           ['history_visibility', -> (val) { @history_visibility = val }],
-        join_rules: ['join_rule', -> (val) { @join_rule = val }],
-        member: -> (e) { process_member e },
-        power_levels: -> (e) { process_power_levels e }
+        'm.room.join_rules' => ['join_rule', -> (val) { @join_rule = val }],
+        'm.room.member' => -> (e) { process_member e },
+        'm.room.power_levels' => -> (e) { process_power_levels e }
       }.freeze
 
       # @!attribute [r] alias
@@ -85,9 +85,7 @@ module Chatrix
       def process_event(event)
         return if Events.processed? event
 
-        type = event['type'].match(/\w+$/).to_s.to_sym
-
-        case h = HANDLERS[type]
+        case h = HANDLERS[event['type']]
         when Array
           broadcast h.first, @room, h.last.call(event['content'][h.first])
         when Proc
