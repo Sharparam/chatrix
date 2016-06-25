@@ -382,8 +382,6 @@ module Chatrix
     #   the request is aborted.
     # @return [Hash] The initial snapshot of the state (if no `since` value
     #   was provided), or a delta to use for updating state.
-    #
-    # rubocop:disable MethodLength
     def sync(filter: nil, since: nil, full_state: false,
              set_presence: true, timeout: 30_000)
       options = { full_state: full_state }
@@ -391,16 +389,10 @@ module Chatrix
       options[:since] = since if since
       options[:set_presence] = 'offline' unless set_presence
       options[:timeout] = timeout if timeout
-
-      if filter.is_a? Integer
-        options[:filter] = filter
-      elsif filter.is_a? Hash
-        options[:filter] = URI.encode filter.to_json
-      end
+      options[:filter] = parse_filter filter
 
       make_request(:get, '/sync', params: options).parsed_response
     end
-    # rubocop:enable MethodLength
 
     # Joins a room on the homeserver.
     #
@@ -731,7 +723,20 @@ module Chatrix
       else
         handler = ERROR_HANDLERS[response.code]
         raise handler.first.new response.parsed_response, handler.last
+      end
+    end
 
+    # Parses a filter object for use in a query string.
+    # @param filter [String,Hash] The filter object to parse.
+    # @return [String] Query-friendly filter object.
+    def parse_filter(filter)
+      case filter
+      when String
+        filter
+      when Hash
+        URI.encode filter.to_json
+      else
+        raise ArgumentError, 'Invalid filter object'
       end
     end
   end
