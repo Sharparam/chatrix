@@ -36,6 +36,7 @@ module Chatrix
     # Registered request error handlers.
     ERROR_HANDLERS = {
       400 => [RequestError, 'Request failed'],
+      401 => [AuthenticationError, 'Server requests additional authentication'],
       403 => [ForbiddenError, 'You do not have access to that resource'],
       404 => [NotFoundError, 'The resource was not found'],
       429 => [RateLimitError, 'The request was rate limited']

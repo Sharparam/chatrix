@@ -92,4 +92,32 @@ module Chatrix
       @room = room
     end
   end
+
+  # Raised when there is an issue with authentication.
+  #
+  # This can either be because authentication failed outright or because
+  # more information is required by the server to successfully authenticate.
+  #
+  # If authentication failed then the `data` attribute will be an empty hash.
+  #
+  # If more information is required the `data` hash will contain information
+  # about what additional information is needed to authenticate.
+  class AuthenticationError < ApiError
+    # @!attribute [r] data
+    #   @return [Hash] If the server requires additional information for
+    #     authentication, this attribute will contain information on what
+    #     that data is.
+    attr_reader :data
+
+    # Initializes a new AuthenticationError instance.
+    # @param error [Hash] The error response from the server.
+    def initialize(error)
+      super
+
+      # Set data to be the error response hash WITHOUT the error code and
+      # error values. This will leave it with only the data relevant for
+      # handling authentication.
+      @data = error.select { |key| !%w{(errcode), (error)}.include? key }
+    end
+  end
 end
