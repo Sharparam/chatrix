@@ -1,26 +1,66 @@
-describe Chatrix::RequestError do
-  let(:response) { { 'errcode' => 'M_SOME_ERR', 'error' => 'my error' } }
-  let(:error) { Chatrix::RequestError.new response }
+describe 'errors' do
+  let(:response) { { 'errcode' => 'M_GENERIC', 'error' => 'Generic error' } }
 
-  it 'should set the correct error code' do
-    expect(error.code).to eql response['errcode']
-  end
+  describe Chatrix::RequestError do
+    let(:error) { Chatrix::RequestError.new response }
 
-  it 'should set the correct error message' do
-    expect(error.api_message).to eql response['error']
-  end
-end
-
-describe Chatrix::RateLimitError do
-  context 'with provided delay' do
-    let(:response) do
-      { 'errcode' => 'M_FOO', 'error' => 'slow down', 'retry_after_ms' => 1234 }
+    it 'should set the correct error code' do
+      expect(error.code).to eql response['errcode']
     end
 
-    let(:error) { Chatrix::RateLimitError.new response }
+    it 'should set the correct error message' do
+      expect(error.api_message).to eql response['error']
+    end
+  end
 
-    it 'should set the correct delay' do
-      expect(error.retry_delay).to eql response['retry_after_ms']
+  describe Chatrix::RateLimitError do
+    context 'with provided delay' do
+      let(:rate_response) do
+        {
+          'errcode' => 'M_FOO',
+          'error' => 'slow down',
+          'retry_after_ms' => 1234
+        }
+      end
+
+      let(:error) { Chatrix::RateLimitError.new rate_response }
+
+      it 'should set the correct delay' do
+        expect(error.retry_delay).to eql rate_response['retry_after_ms']
+      end
+
+      it 'should have an error code' do
+        expect(error.code).to eql rate_response['errcode']
+      end
+
+      it 'should have an error message' do
+        expect(error.api_message).to eql rate_response['error']
+      end
+    end
+
+    context 'without a delay' do
+      let(:error) { Chatrix::RateLimitError.new response }
+
+      it 'should not set a delay' do
+        expect(error.retry_delay).to be nil
+      end
+
+      it 'should have an error code' do
+        expect(error.code).to eql response['errcode']
+      end
+
+      it 'should have an error message' do
+        expect(error.api_message).to eql response['error']
+      end
+    end
+  end
+
+  describe Chatrix::UserNotFoundError do
+    let(:user) { '@user:host.tld' }
+    let(:error) { Chatrix::UserNotFoundError.new user, response }
+
+    it 'should have a username' do
+      expect(error.username).to eql user
     end
 
     it 'should have an error code' do
@@ -32,15 +72,12 @@ describe Chatrix::RateLimitError do
     end
   end
 
-  context 'without a delay' do
-    let(:response) do
-      { 'errcode' => 'M_NO_DELAY', 'error' => 'how long?' }
-    end
+  describe Chatrix::AvatarNotFoundError do
+    let(:user) { '@user:host.tld' }
+    let(:error) { Chatrix::AvatarNotFoundError.new user, response }
 
-    let(:error) { Chatrix::RateLimitError.new response }
-
-    it 'should not set a delay' do
-      expect(error.retry_delay).to be nil
+    it 'should have a username' do
+      expect(error.username).to eql user
     end
 
     it 'should have an error code' do
@@ -51,31 +88,21 @@ describe Chatrix::RateLimitError do
       expect(error.api_message).to eql response['error']
     end
   end
-end
 
-describe Chatrix::UserNotFoundError do
-  let(:user) { '@user:host.tld' }
-  let(:error) { Chatrix::UserNotFoundError.new user }
+  describe Chatrix::RoomNotFoundError do
+    let(:room) { '#room:host.tld' }
+    let(:error) { Chatrix::RoomNotFoundError.new room, response }
 
-  it 'should have a username' do
-    expect(error.username).to eql user
-  end
-end
+    it 'should have a room name' do
+      expect(error.room).to eql room
+    end
 
-describe Chatrix::AvatarNotFoundError do
-  let(:user) { '@user:host.tld' }
-  let(:error) { Chatrix::AvatarNotFoundError.new user }
+    it 'should have an error code' do
+      expect(error.code).to eql response['errcode']
+    end
 
-  it 'should have a username' do
-    expect(error.username).to eql user
-  end
-end
-
-describe Chatrix::RoomNotFoundError do
-  let(:room) { '#room:host.tld' }
-  let(:error) { Chatrix::RoomNotFoundError.new room }
-
-  it 'should have a room name' do
-    expect(error.room).to eql room
+    it 'should have an error message' do
+      expect(error.api_message).to eql response['error']
+    end
   end
 end
