@@ -66,7 +66,6 @@ module Chatrix
     # @return [String] Returns the user's display name if one is set,
     #   otherwise returns the ID.
     def to_s
-      return @displayname if @displayname
       @id
     end
 
