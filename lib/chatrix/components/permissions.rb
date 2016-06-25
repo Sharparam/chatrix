@@ -1,7 +1,11 @@
+require 'wisper'
+
 module Chatrix
   module Components
     # Helper for parsing permissions in a room.
     class Permissions
+      include Wisper::Publisher
+
       # Initializes a new Permissions instance.
       # @param room [Room] The room that this permissions set belongs to.
       def initialize(room)
@@ -18,12 +22,11 @@ module Chatrix
         @actions[:invite] = content['invite']
         @actions[:redact] = content['redact']
 
-        events = content['events']
-        @events[:avatar] = events['m.room.avatar']
-        @events[:alias] = events['m.room.canonical_alias']
-        @events[:history_visibility] = events['m.room.history_visibility']
-        @events[:name] = events['m.room.name']
-        @events[:power_levels] = events['m.room.power_levels']
+        content['events'].each do |event, level|
+          @events[event.match(/\w+$/).to_s.to_sym] = level
+        end
+
+        broadcast :update, @room, self
       end
 
       # Check if a user can perform an action.
