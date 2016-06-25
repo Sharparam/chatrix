@@ -5,7 +5,6 @@ require 'chatrix/components/messaging'
 require 'chatrix/components/permissions'
 require 'chatrix/components/admin'
 
-require 'logger'
 require 'set'
 require 'wisper'
 
