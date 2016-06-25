@@ -34,6 +34,18 @@ module Chatrix
       @admin = Components::Admin.new self, @matrix
     end
 
+    # Convenience method to get the canonical alias from this room's state.
+    # @return [String] The canonical alias for this room.
+    def canonical_alias
+      @state.canonical_alias
+    end
+
+    # Convenience method to get the name from this room's state.
+    # @return [String] The name for this room.
+    def name
+      @state.name
+    end
+
     # Process join events for this room.
     # @param data [Hash] Event data containing state and timeline events.
     def process_join(data)
@@ -59,7 +71,7 @@ module Chatrix
     #   If it has a canonical alias, the alias is returned.
     #   If it has neither a name nor alias, the room ID is returned.
     def to_s
-      @state.name || @state.alias || @id
+      name || canonical_alias || @id
     end
   end
 end
