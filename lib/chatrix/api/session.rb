@@ -19,8 +19,9 @@ module Chatrix
 
       # Performs a login attempt.
       #
-      # @note A successful login will update the {#access_token access_token}
-      #   to the new one returned from the login response.
+      # @note A successful login will update the
+      #   {Matrix#access_token access_token} to the new one returned from
+      #   the login response.
       #
       # @param method [String] The method to use for logging in.
       #   For user/password combination, this should be `m.login.password`.
@@ -64,8 +65,8 @@ module Chatrix
       # Gets a new access token to use for API calls when the current one
       # expires.
       #
-      # @note On success, the internal {#access_token access_token} will be
-      #   updated automatically for use in subsequent API calls.
+      # @note On success, the internal {Matrix#access_token access_token} will
+      #   be updated automatically for use in subsequent API calls.
       #
       # @param token [String,nil] The `refresh_token` to provide for the server
       #   when requesting a new token. If not set, the internal refresh and

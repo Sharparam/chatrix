@@ -50,7 +50,7 @@ module Chatrix
       # Sets a new display name for a user.
       #
       # @note Can only be used on the user who possesses the
-      #   {#access_token access_token} currently in use.
+      #   {Matrix#access_token access_token} currently in use.
       #
       # @param user [String] The user to modify (`@user:host.tld`).
       # @param displayname [String] The new displayname to set.
@@ -115,7 +115,7 @@ module Chatrix
 
       # Updates the presence status of a user.
       #
-      # @note Only the user for whom the {#access_token access_token} is
+      # @note Only the user for whom the {Matrix#access_token access_token} is
       #   valid for can have their presence updated.
       #
       # @param user [String] The user to update.
