@@ -1,10 +1,10 @@
-require 'chatrix/event_processor'
+require 'chatrix/events'
 
 require 'wisper'
 
 module Chatrix
   # Describes a user.
-  class User < EventProcessor
+  class User
     include Wisper::Publisher
 
     # @!attribute [r] id
@@ -19,8 +19,6 @@ module Chatrix
     # Initializes a new User instance.
     # @param id [String] The user ID.
     def initialize(id)
-      super()
-
       @id = id
 
       # room_id => membership
@@ -36,33 +34,11 @@ module Chatrix
       @memberships[room][:power] || 0
     end
 
-    # Check if this user can perform a certain action in the specified room.
-    #
-    # @param action [Symbol] The action to check permission for.
-    # @param room [Room] The room to check permissions in.
-    # @return [Boolean] `true` if the user can perform the action in the room,
-    #   otherwise `false`.
-    def can?(action, room)
-      room.can? self, action
-    end
-
-    # Check if this user can set an event in the specified room.
-    #
-    # @param event [Symbol] The event to check permission for.
-    # @param room [Room] The room to check permissions in.
-    # @return [Boolean] `true` if the user can set the event in the room,
-    #   otherwise `false`.
-    def can_set?(event, room)
-      room.can_set? self, event
-    end
-
     # Process a member event.
     #
     # @param room [Room] The room that sent the event.
     # @param event [Hash] Event data.
     def process_member_event(room, event)
-      return if processed? event
-
       content = event['content']
 
       membership = (@memberships[room] ||= {})
@@ -73,7 +49,7 @@ module Chatrix
       update_avatar(content['avatar_url']) if content.key? 'avatar_url'
       update_displayname(content['displayname']) if content.key? 'displayname'
 
-      processed event
+      Events.processed event
     end
 
     # Process a power level update in a room.

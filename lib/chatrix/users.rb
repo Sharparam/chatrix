@@ -1,4 +1,5 @@
 require 'chatrix/user'
+require 'chatrix/events'
 
 require 'wisper'
 
@@ -30,6 +31,7 @@ module Chatrix
     # @param room [Room] Which room the events are related to.
     # @param event [Hash] Event data.
     def process_member_event(room, event)
+      return if Events.processed? event
       get_user(event['sender']).process_member_event room, event
     end
 
