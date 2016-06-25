@@ -20,7 +20,7 @@ module Chatrix
       # @param reason [String] The reason for the kick.
       # @return [Boolean] `true` if the user was kicked, otherwise `false`.
       def kick(user, reason)
-        @matrix.kick @room.id, resolve_user(user), reason
+        @matrix.rooms.actions.kick @room.id, user, reason
       end
 
       # Bans a user from the room.
@@ -30,24 +30,16 @@ module Chatrix
       # @param reason [String] The reason for the ban.
       # @return [Boolean] `true` if the user was kicked, otherwise `false`.
       def ban(user, reason)
-        @matrix.ban @room.id, resolve_user(user), reason
+        @matrix.rooms.actions.ban @room.id, user, reason
       end
 
-      private
-
-      # Resolves a user object into a user ID.
-      # @param user [User,String] The object to convert, can be a user ID or
-      #   user object.
-      # @return [String] A user ID for the user.
-      def resolve_user(user)
-        case user
-        when String
-          user
-        when User
-          user.id
-        else
-          raise ArgumentError, 'Invalid user object'
-        end
+      # Unbans a user from the room.
+      #
+      # @param user [User,String] The user to unban, can be either a User
+      #   objec or a String (user ID).
+      # @return [Boolean] `true` if the user was unbanned, otherwise `false`.
+      def unban(user)
+        @matrix.rooms.actions.unban @room.id, user
       end
     end
   end
