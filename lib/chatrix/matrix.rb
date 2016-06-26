@@ -57,7 +57,7 @@ module Chatrix
 
     # @!attribute [r] homeserver
     #   @return [String] The homeserver for this API object.
-    attr_reader :homeserver
+    attr_reader :homeserver, :session, :users, :rooms
 
     # Initializes a new instance of Matrix.
     #
