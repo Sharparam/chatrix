@@ -46,8 +46,7 @@ module Chatrix
 
       broadcast(:membership, self, room, membership)
 
-      update_avatar(content['avatar_url']) if content.key? 'avatar_url'
-      update_displayname(content['displayname']) if content.key? 'displayname'
+      update(event['content'])
 
       Events.processed event
     end
@@ -70,6 +69,13 @@ module Chatrix
     end
 
     private
+
+    # Updates metadata for this user.
+    # @param data [Hash{String=>String}] User metadata.
+    def update(data)
+      update_avatar(data['avatar_url']) if data.key? 'avatar_url'
+      update_displayname(data['displayname']) if data.key? 'displayname'
+    end
 
     # Sets a new avatar URL for this user.
     # @param url [String] The new URL to set.
