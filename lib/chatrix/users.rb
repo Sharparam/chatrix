@@ -46,6 +46,12 @@ module Chatrix
       end
     end
 
+    def process_invite(room, event)
+      sender = get_user(event['sender'])
+      invitee = get_user(event['state_key'])
+      invitee.process_invite room, sender, event
+    end
+
     private
 
     # Get the user instance for a specified user ID.

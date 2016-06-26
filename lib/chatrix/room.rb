@@ -56,6 +56,7 @@ module Chatrix
     # Process invite events for this room.
     # @param data [Hash] Event data containing special invite data.
     def process_invite(data)
+      data['invite_state']['events'].each { |e| process_invite_event e }
     end
 
     # Process leave events for this room.
@@ -72,6 +73,19 @@ module Chatrix
     #   If it has neither a name nor alias, the room ID is returned.
     def to_s
       name || canonical_alias || @id
+    end
+
+    private
+
+    def process_invite_event(event)
+      return unless event['type'] == 'm.room.member'
+      return unless event['content']['membership'] == 'invite'
+      @users.process_invite self, event
+      sender = @users[event['sender']]
+      invitee = @users[event['state_key']]
+      # Return early if the user is already in the room
+      return if @state.member? invitee
+      broadcast(:invited, sender, invitee)
     end
   end
 end

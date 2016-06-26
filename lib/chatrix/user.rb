@@ -39,12 +39,15 @@ module Chatrix
     # @param room [Room] The room that sent the event.
     # @param event [Hash] Event data.
     def process_member_event(room, event)
-      content = event['content']
-
       membership = (@memberships[room] ||= {})
-      membership[:type] = content['membership']
+      type = event['content']['membership'].to_sym
 
-      broadcast(:membership, self, room, membership)
+      # Only update the membership status if we are currently not in the room
+      # or if the new state is that we have left.
+      if membership[:type] != :join || type == :leave
+        membership[:type] = type
+        broadcast(:membership, self, room, membership)
+      end
 
       update(event['content'])
 
@@ -59,6 +62,18 @@ module Chatrix
       membership = (@memberships[room] ||= {})
       membership[:power] = level
       broadcast(:power_level, self, room, level)
+    end
+
+    # Process an invite to a room.
+    # @param room [Room] The room the user was invited to.
+    # @param sender [User] The user who sent the invite.
+    # @param event [Hash] Event data.
+    def process_invite(room, sender, event)
+      # Return early if we're already part of this room
+      membership = (@memberships[room] ||= {})
+      return if membership[:type] == :join
+      process_member_event room, event
+      broadcast(:invited, self, room, sender)
     end
 
     # Converts this User object to a string representation of it.
