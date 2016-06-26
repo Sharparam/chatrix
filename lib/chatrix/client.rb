@@ -40,6 +40,9 @@ module Chatrix
     #
     # Launches a new thread that will continously check for new events
     # from the server.
+    #
+    # @see #sync! See the documentation for {#sync!} for more information
+    #   and what happens in case of an error during sync.
     def start_syncing
       @sync_thread ||= Thread.new { loop { sync! } }
     end
