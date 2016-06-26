@@ -66,7 +66,6 @@ module Chatrix
     def initialize(token = nil, homeserver = DEFAULT_HOMESERVER)
       @homeserver = homeserver
       @base_uri = @homeserver + API_PATH
-      @transaction_id = 0
       @access_token = token
 
       @session = Api::Session.new self
