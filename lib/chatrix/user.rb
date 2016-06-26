@@ -58,7 +58,7 @@ module Chatrix
     def process_power_level(room, level)
       membership = (@memberships[room] ||= {})
       membership[:power] = level
-      broadcast(:membership, self, room, membership)
+      broadcast(:power_level, self, room, level)
     end
 
     # Converts this User object to a string representation of it.
