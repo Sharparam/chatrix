@@ -133,7 +133,11 @@ module Chatrix
       def handle_member(event)
         @users.process_member_event self, event
         user = @users[event['sender']]
-        membership = event['membership'].to_sym
+        membership = event['content']['membership'].to_sym
+
+        # Don't process invite state change if the user is already a
+        # member in the room.
+        return if membership == :invite && member?(user)
 
         if membership == :join
           @members.add user
