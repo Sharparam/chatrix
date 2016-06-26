@@ -13,6 +13,18 @@ module Chatrix
         @matrix = matrix
       end
 
+      # Joins the room. Can only be used on public rooms or if the user
+      # has been invited.
+      def join
+        @matrix.rooms.actions.join @room.id
+      end
+
+      # Leaves the room. If the user is currently invited to the room,
+      # leaving the room is the same as rejecting the invite.
+      def leave
+        @matrix.rooms.actions.leave @room.id
+      end
+
       # Kicks a user from the room.
       #
       # @param user [User,String] The user to kick, can be either a User
