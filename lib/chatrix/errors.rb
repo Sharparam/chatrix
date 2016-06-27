@@ -5,6 +5,9 @@ module Chatrix
 
   # Errors that stem from an API call.
   class ApiError < ChatrixError
+    # @return [Hash] the raw error response object.
+    attr_reader :error
+
     # @return [String] the type of error. `'E_UNKNOWN'` if the server
     #   did not give an error code.
     attr_reader :code
@@ -16,6 +19,7 @@ module Chatrix
     # Initializes a new RequestError instance.
     # @param error [Hash{String=>String}] The error response object.
     def initialize(error)
+      @error = error
       @code = error['errcode'] || 'E_UNKNOWN'
       @api_message = error['error'] || 'Unknown error'
     end
