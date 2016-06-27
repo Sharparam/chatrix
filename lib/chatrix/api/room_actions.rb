@@ -232,6 +232,23 @@ module Chatrix
         ).code == 200
       end
 
+      # Updates the marker for the given receipt type to point to the
+      # specified event.
+      #
+      # @param room [String] The room to update the receipt in.
+      # @param event [String] The new event to point the receipt to.
+      # @param type [String] The receipt type to update.
+      # @param data [Hash] Any additional data to attach to `content`.
+      # @return [Boolean] `true` if the receipt was successfully updated,
+      #   otherwise `false`.
+      def set_receipt(room, event, type = 'm.read', data = {})
+        make_request(
+          :post,
+          "/rooms/#{room}/receipt/#{type}/#{event}",
+          content: data
+        ).code == 200
+      end
+
       # Redacts a room event from the server.
       #
       # @param room [String] The room to redact the event from.
