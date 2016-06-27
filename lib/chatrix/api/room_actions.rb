@@ -231,6 +231,20 @@ module Chatrix
           content: { typingState: { typing: typing, timeout: duration } }
         ).code == 200
       end
+
+      # Redacts a room event from the server.
+      #
+      # @param room [String] The room to redact the event from.
+      # @param event [String] The event to redact.
+      # @param reason [String] The reason for redacting the event.
+      # @return [String] The ID for the redaction event.
+      def redact(room, event, reason)
+        make_request(
+          :put,
+          "/rooms/#{room}/redact/#{event}/#{@transaction_id += 1}",
+          content: { reason: reason }
+        )['event_id']
+      end
     end
   end
 end
