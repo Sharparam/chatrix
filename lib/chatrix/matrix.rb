@@ -4,6 +4,7 @@ require 'chatrix/api/session'
 require 'chatrix/api/users'
 require 'chatrix/api/rooms'
 require 'chatrix/api/media'
+require 'chatrix/api/push'
 
 require 'httparty'
 
@@ -74,6 +75,10 @@ module Chatrix
     #   API calls with.
     attr_reader :media
 
+    # @return [Api::Push] the instance of Api::Push to perform push-related
+    #   API calls with.
+    attr_reader :push
+
     # Initializes a new instance of Matrix.
     #
     # @param token [String] The access token to use.
@@ -87,6 +92,7 @@ module Chatrix
       @users = Api::Users.new self
       @rooms = Api::Rooms.new self
       @media = Api::Media.new self
+      @push = Api::Push.new self
     end
 
     # Gets supported API versions from the server.
