@@ -189,17 +189,21 @@ module Chatrix
     #
     # @param params [Hash{String=>String},nil] Query parameters to add to
     #   the options hash.
-    # @param content [Hash,nil] Request content to add to the options hash.
+    # @param content [Hash,#read,nil] Request content. Can be a hash,
+    #   stream, or `nil`.
     # @return [Hash] Options hash ready to be passed into a server request.
-    def make_request_options(params, content)
-      options = {
-        query: @access_token ? { access_token: @access_token } : {}
-      }
+    def make_request_options(params, content, headers = {})
+      { headers: headers }.tap do |o|
+        o[:query] = @access_token ? { access_token: @access_token } : {}
+        o[:query].merge!(params) if params.is_a? Hash
+        o.merge! make_request_body content
+      end
+    end
 
-      options[:query].merge!(params) if params.is_a? Hash
-      options[:body] = content.to_json if content.is_a? Hash
-
-      options
+    def make_request_body(content)
+      key = content.respond_to?(:read) ? :body_stream : :body
+      value = content.is_a? Hash ? content.to_json : content
+      { key => value }
     end
 
     # Parses a HTTParty Response object and returns it if it was successful.
