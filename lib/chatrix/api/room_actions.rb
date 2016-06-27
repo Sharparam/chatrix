@@ -9,6 +9,52 @@ module Chatrix
         @transaction_id = 0
       end
 
+      # Creates a new room on the server.
+      #
+      # @param data [Hash] Additional data to send when creating the room.
+      #   None of these are required when creating a new room.
+      #
+      # @option data [Array<String>] :invite A list of user IDs to invite
+      #   when the room has been created.
+      # @option data [String] :name A custom name to give the room.
+      # @option data ['public', 'private'] :visibility The visibility to
+      #   create the room with.
+      # @option data [Array<Hash>] :invite_3pid A list of third-party
+      #   ID objects to invite to the room.
+      # @option data [String] :topic A topic to set for the room.
+      # @option data ['public_chat', 'trusted_private_chat', 'private_chat']
+      #   :preset Sets various state events based on a preset.
+      #
+      #    * **`private_chat`**: `join_rules` is `invite`,
+      #      `history_visibility` is `shared`.
+      #    * **`trusted_private_chat`**: `join_rules` is `invite`,
+      #      `history_visibility` is `shared`, all invited users get the
+      #      same power level as the room creator.
+      #    * **`public_chat`**: `join_rules` is `public`,
+      #      `history_visibility` is `shared`.
+      # @option data [Hash{String => Object}] :creation_content Additional data
+      #   to add to the `'m.room.create'` content.
+      # @option data [Array<Hash>] :initial_state A list of state events to
+      #   set in the room.
+      # @option data [String] :room_alias_name The **localpart** of the alias
+      #   to sets for this room. The localpart is the part of the alias
+      #   between the "`#`" sign and the "`:host.tld`" ending part. In the
+      #   alias `#hello:world.org`, the "`hello`" part is the localpart.
+      #
+      # @return [String] the ID of the created room.
+      #
+      # @example Create a room with an alias, name, and invited user
+      #   id = create(
+      #     room_alias_name: 'foobar',
+      #     name: 'Foo Bar Baz!',
+      #     invite: ['@silly:example.org']
+      #   )
+      #
+      #   puts "Room #{id} created!"
+      def create(data = {})
+        make_request(:post, '/createRoom', content: data)['room_id']
+      end
+
       # Joins a room on the homeserver.
       #
       # @param room [String] The room to join.
