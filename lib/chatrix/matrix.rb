@@ -170,12 +170,15 @@ module Chatrix
     #   in the query string (part of the URL, not put in the request body).
     # @param content [Hash] Content to put in the request body, must
     #   be serializable to json via `#to_json`.
+    # @param headers [Hash] Additional headers to pass to the request.
+    # @param base [String] The base URI that the `path` will append to.
     # @yield [fragment] HTTParty will call the block during the request.
     #
     # @return [HTTParty::Response] The HTTParty response object.
-    def make_request(method, path, params: nil, content: nil, &block)
-      path = @base_uri + URI.encode(path)
-      options = make_request_options params, content
+    def make_request(method, path, params: nil, content: nil, headers: {},
+                     base: @base_uri, &block)
+      path = base + URI.encode(path)
+      options = make_request_options params, content, headers
 
       parse_response METHODS[method].call(path, options, &block)
     end
