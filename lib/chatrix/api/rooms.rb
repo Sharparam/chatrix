@@ -194,6 +194,18 @@ module Chatrix
           make_request(:get, "/rooms/#{room}/state").parsed_response
         end
       end
+
+      # Sends a state event to a room, with an optional state key.
+      # @param room [String] The room to send the event to.
+      # @param type [String] The event type to send.
+      # @param content [Hash] The content to set for the event.
+      # @param key [String,nil] Optional `state_key` to use.
+      # @return [String] The event ID for the sent event.
+      def send_state(room, type, content, key = nil)
+        path = key ? "/rooms/#{room}/state/#{type}/#{key}"
+                   : "/rooms/#{room}/state/#{type}"
+        make_request(:put, path, content: content)['event_id']
+      end
     end
   end
 end
