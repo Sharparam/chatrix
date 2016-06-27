@@ -16,6 +16,46 @@ module Chatrix
         make_request(:get, '/account/3pid')['threepids']
       end
 
+      # Registers a new user on the homeserver.
+      #
+      # @note On a successful registration, the
+      #   {Matrix#access_token access_token} and `refresh_token` will be
+      #   updated to the values returned by the server.
+      #
+      # @param data [Hash] Registration data. Populate this with the
+      #   information needed to register the new user.
+      #
+      #   Refer to the official API documentation on how to populate the
+      #   data hash.
+      #
+      # @param kind [String] The kind of registration to make.
+      #   Either `'guest'` or `'user'`.
+      #
+      # @return [Hash] On success, returns a hash with information about the
+      #   newly registered user. An example return value is given below.
+      #
+      #   ```ruby
+      #   {
+      #     'user_id' => '@foo:bar.org',
+      #     'home_server' => 'https://bar.org',
+      #     'access_token' => 'some secret token',
+      #     'refresh_token' => 'refresh token here'
+      #   }
+      #   ```
+      def register(data, kind = 'user')
+        response = make_request(
+          :post,
+          '/register',
+          params: { kind: kind },
+          content: data
+        )
+
+        @matrix.access_token = response['access_token']
+        @refresh_token = response['refresh_token']
+
+        response.parsed_response
+      end
+
       # Performs a login attempt.
       #
       # @note A successful login will update the
