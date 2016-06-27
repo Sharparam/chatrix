@@ -6,7 +6,6 @@ module Chatrix
       # @param matrix [Matrix] The matrix API instance.
       def initialize(matrix)
         super
-
         @transaction_id = 0
       end
 
