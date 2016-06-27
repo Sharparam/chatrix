@@ -3,6 +3,7 @@ module Chatrix
     # Wraps a matrix instance for use in calling API endpoints.
     class ApiComponent
       # Initializes a new ApiComponent instance.
+      # @param matrix [Matrix] The matrix API instance.
       def initialize(matrix)
         @matrix = matrix
       end
