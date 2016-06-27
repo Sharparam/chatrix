@@ -49,6 +49,7 @@ module Chatrix
       #
       # @param (see #get_user)
       # @raise (see #get_user)
+      # @return [String] The user's display name.
       def get_displayname(user)
         make_request(:get, "/profile/#{user}/displayname")['displayname']
       rescue NotFoundError => e
