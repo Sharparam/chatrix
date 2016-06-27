@@ -129,6 +129,22 @@ module Chatrix
       make_request(:get, '/sync', params: options).parsed_response
     end
 
+    # Gets the definition for a filter.
+    # @param user [String] The user that has the filter.
+    # @param filter [String] The ID of the filter to get.
+    # @return [Hash] The filter definition.
+    def get_filter(user, filter)
+      make_request(:get, "/user/#{user}/filter/#{filter}").parsed_response
+    end
+
+    # Uploads a filter to the server.
+    # @param user [String] The user to upload the filter as.
+    # @param filter [Hash] The filter definition.
+    # @return [String] The ID of the created filter.
+    def create_filter(user, filter)
+      make_request(:post, "/user/#{user}/filter", content: filter)['filter_id']
+    end
+
     # Helper method for performing requests to the homeserver.
     #
     # @param method [Symbol] HTTP request method to use. Use only symbols
