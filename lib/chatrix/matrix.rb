@@ -173,19 +173,23 @@ module Chatrix
     #   available as keys in {METHODS}.
     # @param path [String] The API path to query, relative to the base
     #   API path, eg. `/login`.
-    # @param params [Hash{String=>String}] Additional parameters to include
-    #   in the query string (part of the URL, not put in the request body).
-    # @param content [Hash] Content to put in the request body, must
-    #   be serializable to json via `#to_json`.
-    # @param headers [Hash] Additional headers to pass to the request.
-    # @param base [String] The base URI that the `path` will append to.
+    # @param opts [Hash] Additional request options.
+    #
+    # @option opts [Hash] :params Additional parameters to include in the
+    #   query string (part of the URL, not put in the request body).
+    # @option opts [Hash,#read] :content Content to put in the request body.
+    #   If set, must be a Hash or a stream object.
+    # @option opts [Hash{String => String}] :headers Additional headers to
+    #   include in the request.
+    # @option opts [String,nil] :base If this is set, it will be used as the
+    #   base URI for the request instead of the default (`@base_uri`).
+    #
     # @yield [fragment] HTTParty will call the block during the request.
     #
     # @return [HTTParty::Response] The HTTParty response object.
-    def make_request(method, path, params: nil, content: nil, headers: {},
-                     base: @base_uri, &block)
-      path = base + URI.encode(path)
-      options = make_request_options params, content, headers
+    def make_request(method, path, opts = {}, &block)
+      path = (opts[:base] || @base_uri) + URI.encode(path)
+      options = make_options opts[:params], opts[:content], opts[:headers]
 
       parse_response METHODS[method].call(path, options, &block)
     end
@@ -202,7 +206,7 @@ module Chatrix
     # @param content [Hash,#read,nil] Request content. Can be a hash,
     #   stream, or `nil`.
     # @return [Hash] Options hash ready to be passed into a server request.
-    def make_request_options(params, content, headers = {})
+    def make_options(params, content, headers = {})
       { headers: headers }.tap do |o|
         o[:query] = @access_token ? { access_token: @access_token } : {}
         o[:query].merge!(params) if params.is_a? Hash
