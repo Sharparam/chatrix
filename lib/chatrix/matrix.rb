@@ -92,6 +92,13 @@ module Chatrix
       response['versions']
     end
 
+    # Performs a whois lookup on the specified user.
+    # @param user [String] The user to look up.
+    # @return [Hash] Information about the user.
+    def whois(user)
+      make_request(:get, "/admin/whois/#{user}").parsed_response
+    end
+
     # Synchronize with the latest state on the server.
     #
     # For initial sync, call this method with the `since` parameter
