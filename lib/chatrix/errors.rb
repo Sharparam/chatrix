@@ -18,7 +18,7 @@ module Chatrix
 
     # Initializes a new RequestError instance.
     # @param error [Hash{String=>String}] The error response object.
-    def initialize(error)
+    def initialize(error = {})
       @error = error
       @code = error['errcode'] || 'E_UNKNOWN'
       @api_message = error['error'] || 'Unknown error'
@@ -37,7 +37,7 @@ module Chatrix
 
     # Initializes a new RateLimitError instance.
     # @param error [Hash] The error response object.
-    def initialize(error)
+    def initialize(error = {})
       super
       @retry_delay = error['retry_after_ms'] if error.key? 'retry_after_ms'
     end
@@ -59,7 +59,7 @@ module Chatrix
     # Initializes a new UserNotFoundError instance.
     # @param username [String] The user that wasn't found.
     # @param error [Hash] The error response from the server.
-    def initialize(username, error)
+    def initialize(username, error = {})
       super error
       @username = username
     end
@@ -73,7 +73,7 @@ module Chatrix
     # Initializes a new AvatarNotFoundError instance.
     # @param username [String] Name of the user whose avatar was not found.
     # @param error [Hash] The error response from the server.
-    def initialize(username, error)
+    def initialize(username, error = {})
       super error
       @username = username
     end
@@ -87,7 +87,7 @@ module Chatrix
     # Initializes a new RoomNotFoundError instance.
     # @param room [String] Name of the room that was not found.
     # @param error [Hash] The error response from the server.
-    def initialize(room, error)
+    def initialize(room, error = {})
       super error
       @room = room
     end
@@ -110,7 +110,7 @@ module Chatrix
 
     # Initializes a new AuthenticationError instance.
     # @param error [Hash] The error response from the server.
-    def initialize(error)
+    def initialize(error = {})
       super
 
       # Set data to be the error response hash WITHOUT the error code and
