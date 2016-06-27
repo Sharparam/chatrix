@@ -85,14 +85,15 @@ module Chatrix
       # @note This will **invalidate the access token**. It will no longer be
       #   valid for further API calls.
       #
-      # @return [Hash] The response from the server (an empty hash).
+      # @return [Boolean] `true` if the user was successfully logged out,
+      #   otherwise `false`.
       def logout
         response = make_request :post, '/logout'
 
         # A successful logout means the access token has been invalidated
         @matrix.access_token = nil
 
-        response.parsed_response
+        response.code == 200
       end
 
       # Gets a new access token to use for API calls when the current one
