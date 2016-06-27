@@ -226,7 +226,7 @@ module Chatrix
         response
       else
         handler = ERROR_HANDLERS[response.code]
-        raise handler.first.new response.parsed_response, handler.last
+        raise handler.first.new(response.parsed_response), handler.last
       end
     end
 
