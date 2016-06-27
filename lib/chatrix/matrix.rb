@@ -145,6 +145,21 @@ module Chatrix
       make_request(:post, "/user/#{user}/filter", content: filter)['filter_id']
     end
 
+    # Performs a full text search on the server.
+    # @param from [String] Where to return events from, if given. This can be
+    #   obtained from previous calls to {#search}.
+    # @param options [Hash] Search options, see the official documentation
+    #   for details on how to structure this.
+    # @return [Hash] the search results.
+    def search(from: nil, options: {})
+      make_request(
+        :post,
+        '/search',
+        params: { next_batch: from },
+        content: options
+      ).parsed_response
+    end
+
     # Helper method for performing requests to the homeserver.
     #
     # @param method [Symbol] HTTP request method to use. Use only symbols
