@@ -4,12 +4,6 @@ module Chatrix
   module Api
     # Contains methods to use session related endpoints in the API.
     class Session < ApiComponent
-      # Initializes a new Session instance.
-      # @param matrix [Matrix] The matrix API instance.
-      def initialize(matrix)
-        super
-      end
-
       # Gets third-party IDs associated with the current account.
       # @return [Array] A list of 3rd party IDs.
       def threepids

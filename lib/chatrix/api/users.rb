@@ -4,12 +4,6 @@ module Chatrix
   module Api
     # Contains methods to use user endpoints in the API.
     class Users < ApiComponent
-      # Initializes a new Users instance.
-      # @param matrix [Matrix] The matrix API instance.
-      def initialize(matrix)
-        super
-      end
-
       # Gets information about a specific user.
       #
       # @param user [String] The user to query (`@user:host.tld`).
