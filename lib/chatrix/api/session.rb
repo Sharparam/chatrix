@@ -6,7 +6,7 @@ module Chatrix
     class Session < ApiComponent
       # Gets third-party IDs associated with the current account.
       # @return [Array] A list of 3rd party IDs.
-      def get_threepids
+      def threepids
         make_request(:get, '/account/3pid')['threepids']
       end
 
