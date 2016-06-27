@@ -86,10 +86,11 @@ module Chatrix
     # Gets supported API versions from the server.
     # @return [Array<String>] an array with the supported versions.
     def versions
-      # Because this doesn't follow the usual API_PATH URL, we have to make
-      # an explicit call to #get.
-      response = parse_response get "#{@homeserver}/_matrix/client_versions"
-      response['versions']
+      make_request(
+        :get,
+        '/versions',
+        base: "#{@homeserver}/_matrix/client"
+      )['versions']
     end
 
     # Performs a whois lookup on the specified user.
