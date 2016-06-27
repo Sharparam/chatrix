@@ -46,6 +46,10 @@ module Chatrix
       end
     end
 
+    # Process an invite event for a room.
+    #
+    # @param room [Room] The room from which the event originated.
+    # @param event [Hash] Event data.
     def process_invite(room, event)
       sender = get_user(event['sender'])
       invitee = get_user(event['state_key'])
