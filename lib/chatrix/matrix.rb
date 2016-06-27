@@ -50,14 +50,24 @@ module Chatrix
     # API path used.
     API_PATH = '/_matrix/client/r0'.freeze
 
-    # @!attribute access_token
-    #   @return [String] The access token used when performing requests
-    #     to the homeserver.
+    # @return [String] the access token used when performing requests
+    #   to the homeserver.
     attr_accessor :access_token
 
-    # @!attribute [r] homeserver
-    #   @return [String] The homeserver for this API object.
-    attr_reader :homeserver, :session, :users, :rooms
+    # @return [String] the homeserver for this API object.
+    attr_reader :homeserver
+
+    # @return [Api::Session] the instance of Api::Session to perform
+    #   session-related API calls with.
+    attr_reader :session
+
+    # @return [Api::Users] the instance of Api::Users to perform user-related
+    #   API calls with.
+    attr_reader :users
+
+    # @return [Api::Rooms] the instance of Api::Rooms to perform room-related
+    #   API calls with.
+    attr_reader :rooms
 
     # Initializes a new instance of Matrix.
     #
