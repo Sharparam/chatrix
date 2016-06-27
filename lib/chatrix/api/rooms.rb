@@ -47,6 +47,36 @@ module Chatrix
         make_request(:get, "/user/#{user}/rooms/#{room}/tags")['tags']
       end
 
+      # Deletes a user tag from a room.
+      #
+      # @param user [String] The user to remove the tag for.
+      # @param room [String] The room to remove the tag from.
+      # @param tag [String] The tag to remove.
+      # @return [Boolean] `true` if the tag was removed successfully,
+      #   otherwise `false`.
+      def delete_user_tag(user, room, tag)
+        make_request(
+          :delete,
+          "/user/#{user}/rooms/#{room}/tags/#{tag}"
+        ).code == 200
+      end
+
+      # Adds a user tag to a room.
+      #
+      # @param user [String] The user adding the tag.
+      # @param room [String] The room to add the tag to.
+      # @param tag [String] The tag to add.
+      # @param data [Hash] Any additional data to add to the tag, e.g. ordering.
+      # @return [Boolean] `true` if the tag was successfully added,
+      #   otherwise `false`.
+      def add_user_tag(user, room, tag, data = {})
+        make_request(
+          :put,
+          "/user/#{user}/rooms/#{room}/tags/#{tag}",
+          content: data
+        ).code == 200
+      end
+
       # Get information about a room alias.
       #
       # This can be used to get the room ID that an alias points to.
