@@ -17,8 +17,8 @@ module Chatrix
       # Download media from the server.
       # @param server [String] The server component of an `mxc://` URL.
       # @param id [String] The media ID of the `mxc://` URL (the path).
-      # @return [HTTParty::Response] The HTTParty response object for the request.
-      #   Use the response object to inspect the returned data.
+      # @return [HTTParty::Response] The HTTParty response object for the
+      #   request. Use the response object to inspect the returned data.
       def download(server, id)
         make_request(
           :get,
@@ -34,8 +34,8 @@ module Chatrix
       # @param width [Fixnum] Desired width of the thumbnail.
       # @param height [Fixnum] Desired height of the thumbnail.
       # @param method ['scale', 'crop'] Desired resizing method.
-      # @return [HTTParty::Response] The HTTParty response object for the request.
-      #   Use the response object to inspect the returned data.
+      # @return [HTTParty::Response] The HTTParty response object for the
+      #   request. Use the response object to inspect the returned data.
       def get_thumbnail(server, id, width, height, method = 'scale')
         make_request(
           :get,
