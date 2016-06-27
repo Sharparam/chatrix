@@ -168,6 +168,13 @@ module Chatrix
       ).parsed_response
     end
 
+    # Gets information about the TURN server. Contains credentials and
+    # server URIs for connecting.
+    # @return [Hash] TURN server details.
+    def turn_server
+      make_request(:get, '/voip/turnServer').parsed_response
+    end
+
     # Helper method for performing requests to the homeserver.
     #
     # @param method [Symbol] HTTP request method to use. Use only symbols
