@@ -5,9 +5,8 @@ module Chatrix
   module Api
     # Contains methods for using room endpoints in the API.
     class Rooms < ApiComponent
-      # @!attribute [r] actions
-      #   @return [RoomActions] An instance of RoomActions to perform
-      #     room actions such as joining a room or sending messages.
+      # @return [RoomActions] an instance of RoomActions to perform
+      #   room actions such as joining a room or sending messages.
       attr_reader :actions
 
       # Initializes a new Rooms instance.

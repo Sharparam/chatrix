@@ -11,7 +11,6 @@ module Chatrix
       end
 
       # Gets third-party IDs associated with the current account.
-      #
       # @return [Array] A list of 3rd party IDs.
       def threepids
         make_request(:get, '/account/3pid')['threepids']
@@ -50,7 +49,7 @@ module Chatrix
       # Logs out.
       #
       # @note This will **invalidate the access token**. It will no longer be
-      #   valid for API calls.
+      #   valid for further API calls.
       #
       # @return [Hash] The response from the server (an empty hash).
       def logout
@@ -65,8 +64,9 @@ module Chatrix
       # Gets a new access token to use for API calls when the current one
       # expires.
       #
-      # @note On success, the internal {Matrix#access_token access_token} will
-      #   be updated automatically for use in subsequent API calls.
+      # @note On success, the internal {Matrix#access_token access_token} and
+      #   `refresh_token` will be updated automatically for use in
+      #   subsequent API calls.
       #
       # @param token [String,nil] The `refresh_token` to provide for the server
       #   when requesting a new token. If not set, the internal refresh and

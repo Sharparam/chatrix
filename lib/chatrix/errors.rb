@@ -5,13 +5,13 @@ module Chatrix
 
   # Errors that stem from an API call.
   class ApiError < ChatrixError
-    # @!attribute [r] code
-    #   @return [String] The type of error. `'E_UNKNOWN'` if the server
-    #     did not give an error code.
-    # @!attribute [r] api_message
-    #   @return [String] The error message returned from the server.
-    #     `'Unknown error'` if the server did not give any message.
-    attr_reader :code, :api_message
+    # @return [String] the type of error. `'E_UNKNOWN'` if the server
+    #   did not give an error code.
+    attr_reader :code
+
+    # @return [String] the error message returned from the server.
+    #   `'Unknown error'` if the server did not give any message.
+    attr_reader :api_message
 
     # Initializes a new RequestError instance.
     # @param error [Hash{String=>String}] The error response object.
@@ -27,9 +27,8 @@ module Chatrix
 
   # Error raised when the API request limit is reached.
   class RateLimitError < ApiError
-    # @!attribute [r] retry_delay
-    #   @return [Fixnum,nil] Number of milliseconds to wait before attempting
-    #     this request again. If no delay was provided this will be `nil`.
+    # @return [Fixnum,nil] number of milliseconds to wait before attempting
+    #   this request again. If no delay was provided this will be `nil`.
     attr_reader :retry_delay
 
     # Initializes a new RateLimitError instance.
@@ -50,8 +49,7 @@ module Chatrix
 
   # Raised when a user is not found.
   class UserNotFoundError < NotFoundError
-    # @!attribute [r] username
-    #   @return [String] The name of the user that was not found.
+    # @return [String] the name of the user that was not found.
     attr_reader :username
 
     # Initializes a new UserNotFoundError instance.
@@ -65,8 +63,7 @@ module Chatrix
 
   # Raised when a user's avatar is not found.
   class AvatarNotFoundError < NotFoundError
-    # @!attribute [r] username
-    #   @return [String] The user whose avatar was not found.
+    # @return [String] the user whose avatar was not found.
     attr_reader :username
 
     # Initializes a new AvatarNotFoundError instance.
@@ -80,8 +77,7 @@ module Chatrix
 
   # Raised when a room is not found.
   class RoomNotFoundError < NotFoundError
-    # @!attribute [r] room
-    #   @return [String] The room that was not found.
+    # @return [String] the room that was not found.
     attr_reader :room
 
     # Initializes a new RoomNotFoundError instance.
@@ -103,10 +99,9 @@ module Chatrix
   # If more information is required the `data` hash will contain information
   # about what additional information is needed to authenticate.
   class AuthenticationError < ApiError
-    # @!attribute [r] data
-    #   @return [Hash] If the server requires additional information for
-    #     authentication, this attribute will contain information on what
-    #     that data is.
+    # @return [Hash] a hash with information about the additional information
+    #   required by the server for authentication, if any. If the
+    #   authentication request failed, this will be an empty hash or `nil`.
     attr_reader :data
 
     # Initializes a new AuthenticationError instance.
