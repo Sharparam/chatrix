@@ -55,7 +55,7 @@ module Chatrix
       #   alias and not an ID.
       # @return [Hash] Returns information about the alias in a Hash.
       #
-      # @see #get_room_id #get_room_id is an example of how this method could be
+      # @see #get_id #get_id is an example of how this method could be
       #   used to get a room's ID.
       def get_alias_info(room_alias)
         make_request(:get, "/directory/room/#{room_alias}").parsed_response
