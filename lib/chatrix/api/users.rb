@@ -73,6 +73,35 @@ module Chatrix
         ).code == 200
       end
 
+      # Sets account data for a user.
+      #
+      # @param user [String] The user to add the data to.
+      # @param type [String] The event type of `account_data` to set.
+      # @param data [Hash] The actual data to set.
+      # @return [Boolean] `true` if the account data was successfully set,
+      #   otherwise `false`.
+      def set_data(user, type, data)
+        make_request(
+          :put,
+          "/user/#{user}/account_data/#{type}",
+          content: data
+        ).code == 200
+      end
+
+      # Sets account data for a user specific to a certain room.
+      #
+      # @param (see #set_data)
+      # @param room [String] The room to add the data in.
+      # @return [Boolean] `true` if the account data was successfully set
+      #   in the specified room, otherwise `false`.
+      def set_room_data(user, room, type, data)
+        make_request(
+          :put,
+          "/user/#{user}/rooms/#{room}/account_data/#{type}",
+          content: data
+        ).code == 200
+      end
+
       # Gets the presence list for a user.
       #
       # @param user [String] The user whose list to get.
