@@ -74,6 +74,23 @@ module Chatrix
         end
       end
 
+      # @overload invite(room, user)
+      #   Invites a user to a room by ID.
+      #   @param room [String] The room to invite the user to.
+      #   @param user [String] The user ID to send the invite to.
+      #   @return [Boolean] `true` if the user was successfully invited,
+      #     otherwise `false`.
+      # @overload invite(room, data)
+      #   Invites a user to a room by their 3PID information.
+      #   @param room [String] The room to invite the user to.
+      #   @param data [Hash] 3PID info for the user.
+      #   @return [Boolean] `true` if the user was successfully invited,
+      #     otherwise `false`.
+      def invite(room, data)
+        data = { user_id: data } if data.is_a? String
+        make_request(:post, "/rooms/#{room}/invite", content: data).code == 200
+      end
+
       # Leaves a room (but does not forget about it).
       #
       # @param room [String] The room to leave.
