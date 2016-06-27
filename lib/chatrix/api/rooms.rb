@@ -202,8 +202,10 @@ module Chatrix
       # @param key [String,nil] Optional `state_key` to use.
       # @return [String] The event ID for the sent event.
       def send_state(room, type, content, key = nil)
-        path = key ? "/rooms/#{room}/state/#{type}/#{key}"
-                   : "/rooms/#{room}/state/#{type}"
+        path = "/rooms/#{room}/state/#{type}"
+
+        path += "/#{key}" if key
+
         make_request(:put, path, content: content)['event_id']
       end
     end
