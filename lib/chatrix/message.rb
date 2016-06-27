@@ -10,18 +10,20 @@ module Chatrix
       'm.notice' => :notice
     }.freeze
 
-    # @!attribute [r] raw
-    #   @return [Hash] The raw message data (the `content` field).
-    # @!attribute [r] type
-    #   @return [Symbol,nil] The type of message. Will be nil if the type
-    #     failed to parse.
-    # @!attribute [r] sender
-    #   @return [User] The user who sent this message.
-    # @!attribute [r] body
-    #   @return [String] The text content of the message. If the message is
-    #     of `:html` type, this will contain HTML format. To get the raw
-    #     message text, use the `'body'` field of the {#raw} hash.
-    attr_reader :raw, :type, :sender, :body
+    # @return [Hash] The raw message data (the `content` field).
+    attr_reader :raw
+
+    # @return [Symbol,nil] The type of message. Will be nil if the type
+    #   failed to parse.
+    attr_reader :type
+
+    # @return [User] The user who sent this message.
+    attr_reader :sender
+
+    # @return [String] The text content of the message. If the message is
+    #   of `:html` type, this will contain HTML format. To get the raw
+    #   message text, use the `'body'` field of the {#raw} hash.
+    attr_reader :body
 
     # Initializes a new Message instance.
     #

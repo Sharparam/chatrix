@@ -9,14 +9,21 @@ module Chatrix
   class Room
     include Wisper::Publisher
 
-    # @!attribute [r] id
-    #   @return [String] The ID of this room.
-    # @!attribute [r] admin
-    #   @return [Admin] Administration object for carrying out administrative
-    #     actions like kicking and banning of users.
-    # @!attribute [r] messaging
-    #   @return [Messaging] Handle various message actions through this object.
-    attr_reader :id, :state, :timeline, :admin, :messaging
+    # @return [String] The ID of this room.
+    attr_reader :id
+
+    # @return [State] The state object for this room.
+    attr_reader :state
+
+    # @return [Timeline] The timeline object for this room.
+    attr_reader :timeline
+
+    # @return [Admin] Administration object for carrying out administrative
+    #   actions like kicking and banning of users.
+    attr_reader :admin
+
+    # @return [Messaging] Handle various message actions through this object.
+    attr_reader :messaging
 
     # Initializes a new Room instance.
     #

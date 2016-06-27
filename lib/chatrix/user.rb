@@ -7,14 +7,15 @@ module Chatrix
   class User
     include Wisper::Publisher
 
-    # @!attribute [r] id
-    #   @return [String] The user ID of this user.
-    # @!attribute [r] displayname
-    #   @return [String,nil] The display name of this user, if one has
-    #     been set.
-    # @!attribute [r] avatar
-    #   @return [String,nil] This user's avatar URL, if one has been set.
-    attr_reader :id, :displayname, :avatar
+    # @return [String] The user ID of this user.
+    attr_reader :id
+
+    # @return [String,nil] The display name of this user, if one has
+    #   been set.
+    attr_reader :displayname
+
+    # @return [String,nil] This user's avatar URL, if one has been set.
+    attr_reader :avatar
 
     # Initializes a new User instance.
     # @param id [String] The user ID.

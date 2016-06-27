@@ -9,8 +9,7 @@ module Chatrix
   class Client
     include Wisper::Publisher
 
-    # @!attribute [r] me
-    #   @return [User] The user associated with the access token.
+    # @return [User] The user associated with the access token.
     attr_reader :me
 
     # Initializes a new Client instance.
