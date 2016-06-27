@@ -99,8 +99,7 @@ module Chatrix
     # @return [Array<String>] an array with the supported versions.
     def versions
       make_request(
-        :get, '/versions',
-        base: "#{@homeserver}/_matrix/client"
+        :get, '/versions', base: "#{@homeserver}/_matrix/client"
       )['versions']
     end
 
@@ -165,8 +164,7 @@ module Chatrix
     # @return [Hash] the search results.
     def search(from: nil, options: {})
       make_request(
-        :post, '/search',
-        params: { next_batch: from }, content: options
+        :post, '/search', params: { next_batch: from }, content: options
       ).parsed_response
     end
 
