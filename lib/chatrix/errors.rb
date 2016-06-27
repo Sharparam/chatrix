@@ -116,7 +116,7 @@ module Chatrix
       # Set data to be the error response hash WITHOUT the error code and
       # error values. This will leave it with only the data relevant for
       # handling authentication.
-      @data = error.select { |key| !%w{(errcode), (error)}.include? key }
+      @data = error.select { |key| !%w{(errcode) (error)}.include? key }
     end
   end
 end
