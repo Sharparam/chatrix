@@ -11,7 +11,7 @@ module Chatrix
       # @param matrix [Matrix] The matrix API instance.
       def initialize(matrix)
         super
-        @media_uri = @homeserver + MEDIA_PATH
+        @media_uri = @matrix.homeserver + MEDIA_PATH
       end
 
       # Download media from the server.
