@@ -11,7 +11,8 @@ module Chatrix
 
       # Makes an API request using the underlying Matrix instance.
       # @param args Parameters to pass to Matrix#make_request.
-      # @yield [fragment] HTTParty will call the block during the request.
+      # @yield (see Matrix#make_request)
+      # @return (see Matrix#make_request)
       def make_request(*args, &block)
         @matrix.make_request(*args, &block)
       end
