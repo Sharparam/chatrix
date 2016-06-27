@@ -211,6 +211,12 @@ module Chatrix
       end
     end
 
+    # Create a hash with body content based on the type of `content`.
+    # @param content [Hash,#read,Object] Some kind of content to put into
+    #   the request body. Can be a Hash, stream object, or other kind of
+    #   object.
+    # @return [Hash{Symbol => Object}] A hash with the relevant body key
+    #   and value.
     def make_body(content)
       key = content.respond_to?(:read) ? :body_stream : :body
       value = content.is_a? Hash ? content.to_json : content
