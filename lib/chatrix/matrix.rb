@@ -206,11 +206,11 @@ module Chatrix
       { headers: headers }.tap do |o|
         o[:query] = @access_token ? { access_token: @access_token } : {}
         o[:query].merge!(params) if params.is_a? Hash
-        o.merge! make_request_body content
+        o.merge! make_body content
       end
     end
 
-    def make_request_body(content)
+    def make_body(content)
       key = content.respond_to?(:read) ? :body_stream : :body
       value = content.is_a? Hash ? content.to_json : content
       { key => value }
