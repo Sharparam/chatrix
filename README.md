@@ -36,7 +36,8 @@ Or install it yourself as:
 ## Usage
 ### Using the API class `Chatrix::Matrix`
 This implementation is currently very basic and exposes all the endpoints
-in the `Matrix` class. Example usage:
+in the `Matrix` class and some sub-classes available as attributes on the
+main `Matrix` class. Example usage:
 
 ```ruby
 # Uses the standard matrix.org homeserver
@@ -51,6 +52,10 @@ end
 
 Currently there is no asynchronous calls or built-in handling of
 rate-limiting.
+
+All of the available endpoints *should* be available, if there are some
+missing that are not deprecated in the official API docs, please open an
+issue about it or add them yourself and submit a PR!
 
 ### Using the client class `Chatrix::Client`
 The client class works as a wrapper around the raw API calls to make working
@@ -96,6 +101,8 @@ end
 
 When subscribing to an event, make sure to
 [not return inside the block][no-return-blocks].
+
+*The client is currently a WIP.*
 
 ## Development
 
