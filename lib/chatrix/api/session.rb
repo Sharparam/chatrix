@@ -67,7 +67,7 @@ module Chatrix
       # @example Logging in with username and password
       #   login('m.login.password',
       #         user: '@snoo:reddit.com', password: 'hunter2')
-      def login(method, options = {})
+      def login(method, options)
         response = make_request(
           :post,
           '/login',
