@@ -19,6 +19,23 @@ module Chatrix
         make_request(:post, '/account/3pid', content: data).code == 200
       end
 
+      # Set a new password for the current account.
+      #
+      # @note The server may request additional authentication as per the
+      #   official documentation on the "User-Interactive Authentication API".
+      #
+      # @param password [String] The new password to set.
+      # @param auth [Hash,nil] If provided, the hash will be passed in the
+      #   request as additional parameters inside the `auth` field.
+      # @return [Boolean] `true` if the password was successfully changed,
+      #   otherwise `false`.
+      def set_password(password, auth = nil)
+        data = { new_password: password }
+        data[:auth] = auth if auth
+
+        make_request(:post, '/account/password', content: data).code == 200
+      end
+
       # Registers a new user on the homeserver.
       #
       # @note On a successful registration, the
