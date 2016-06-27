@@ -77,6 +77,8 @@ module Chatrix
 
     private
 
+    # Process an invite event for this room.
+    # @param event [Hash] Event data.
     def process_invite_event(event)
       return unless event['type'] == 'm.room.member'
       return unless event['content']['membership'] == 'invite'
