@@ -11,26 +11,31 @@ module Chatrix
     class State
       include Wisper::Publisher
 
-      # @!attribute [r] canonical_alias
-      #   @return [String,nil] The canonical alias, or `nil` if none has
-      #     been set.
-      # @!attribute [r] name
-      #   @return [String,nil] The name, or `nil` if none has been set.
-      # @!attribute [r] topic
-      #   @return [String,nil] The topic, or `nil` if none has been set.
-      # @!attribute [r] creator
-      #   @return [User] The user who created the room.
-      # @!attribute [r] guest_access
-      #   @return [Boolean] `true` if guests are allowed in the room,
-      #     otherwise `false`.
-      # @!attribute [r] history_visibility
-      #   @return [String] The room's history visibility.
-      # @!attribute [r] join_rule
-      #   @return [String] Join rules for the room.
-      # @!attribute [r] permissions
-      #   @return [Permissions] Check room permissions.
-      attr_reader :canonical_alias, :name, :topic, :creator, :guest_access,
-                  :join_rule, :history_visibility, :permissions
+      # @return [String,nil] The canonical alias, or `nil` if none has
+      #   been set.
+      attr_reader :canonical_alias
+
+      # @return [String,nil] The name, or `nil` if none has been set.
+      attr_reader :name
+
+      # @return [String,nil] The topic, or `nil` if none has been set.
+      attr_reader :topic
+
+      # @return [User] The user who created the room.
+      attr_reader :creator
+
+      # @return [Boolean] `true` if guests are allowed in the room,
+      #   otherwise `false`.
+      attr_reader :guest_access
+
+      # @return [String] Join rules for the room.
+      attr_reader :join_rule
+
+      # @return [String] The room's history visibility.
+      attr_reader :history_visibility
+
+      # @return [Permissions] Check room permissions.
+      attr_reader :permissions
 
       # Initializes a new State instance.
       #
