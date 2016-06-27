@@ -10,6 +10,15 @@ module Chatrix
         make_request(:get, '/account/3pid')['threepids']
       end
 
+      # Adds third-party identification information to the user account.
+      # @param data [Hash] The data to add. Refer to the official documentation
+      #   for more information.
+      # @return [Boolean] `true` if the information was added successfully,
+      #   otherwise `false`.
+      def add_threepid(data)
+        make_request(:post, '/account/3pid', content: data).code == 200
+      end
+
       # Registers a new user on the homeserver.
       #
       # @note On a successful registration, the
