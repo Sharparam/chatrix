@@ -14,8 +14,8 @@ module Chatrix
       #   puts get_user('@foo:matrix.org')['displayname']
       def get(user)
         make_request(:get, "/profile/#{user}").parsed_response
-      rescue NotFoundError
-        raise UserNotFoundError.new(user),
+      rescue NotFoundError => e
+        raise UserNotFoundError.new(user, e.error),
               'The specified user could not be found'
       end
 
@@ -26,8 +26,9 @@ module Chatrix
       # @raise [AvatarNotFoundError] If the avatar or user could not be found.
       def get_avatar(user)
         make_request(:get, "/profile/#{user}/avatar_url")['avatar_url']
-      rescue NotFoundError
-        raise AvatarNotFoundError.new(user), 'Avatar or user could not be found'
+      rescue NotFoundError => e
+        raise AvatarNotFoundError.new(user, e.error),
+              'Avatar or user could not be found'
       end
 
       # Get a user's display name (**not** username).
@@ -36,8 +37,8 @@ module Chatrix
       # @raise (see #get_user)
       def get_displayname(user)
         make_request(:get, "/profile/#{user}/displayname")['displayname']
-      rescue NotFoundError
-        raise UserNotFoundError.new(user),
+      rescue NotFoundError => e
+        raise UserNotFoundError.new(user, e.error),
               'The specified user could not be found'
       end
 
