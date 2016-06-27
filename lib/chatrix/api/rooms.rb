@@ -94,6 +94,28 @@ module Chatrix
               'The specified room alias could not be found'
       end
 
+      # Deletes a room alias.
+      # @param room_alias [String] The alias to delete.
+      # @return [Boolean] `true` if the alias was successfully removed,
+      #   otherwise `false`.
+      def delete_alias(room_alias)
+        make_request(:delete, "/directory/room/#{room_alias}").code == 200
+      end
+
+      # Creates a new alias for a room.
+      #
+      # @param room [String] The room to create an alias for.
+      # @param room_alias [String] The alias to create for the room.
+      # @return [Boolean] `true` if the alias was created successfully,
+      #   otherwise `false`.
+      def create_alias(room, room_alias)
+        make_request(
+          :put,
+          "/directory/room/#{room_alias}",
+          content: { room_id: room }
+        ).code == 200
+      end
+
       # Get a room's ID from its alias.
       #
       # @param room_alias [String] The room alias to query.
