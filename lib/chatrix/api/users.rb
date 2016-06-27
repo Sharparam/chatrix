@@ -31,6 +31,20 @@ module Chatrix
               'Avatar or user could not be found'
       end
 
+      # Sets a new avatar for a user.
+      #
+      # @param user [String] The user to update.
+      # @param avatar [String] The new avatar to set, an `mxc://` URL.
+      # @return [Boolean] `true` if the new avatar was set successfully,
+      #   otherwise `false`.
+      def set_avatar(user, avatar)
+        make_request(
+          :put,
+          "/profile/#{user}/avatar_url",
+          content: { avatar_url: avatar }
+        ).code == 200
+      end
+
       # Get a user's display name (**not** username).
       #
       # @param (see #get_user)
