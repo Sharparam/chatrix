@@ -1,3 +1,6 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 describe Chatrix do
   it 'has a version number' do
     expect(Chatrix::VERSION).not_to be nil

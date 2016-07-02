@@ -1,3 +1,6 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 describe Chatrix::Matrix do
   context 'when created with no args' do
     it 'has a default homeserver' do

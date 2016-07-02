@@ -1,3 +1,6 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 module Chatrix
   module Components
     # Class to handle messaging actions for a room.

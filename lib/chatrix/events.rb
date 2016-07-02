@@ -1,3 +1,6 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 module Chatrix
   # Keeps track of what events have already been processed.
   module Events

@@ -1,3 +1,6 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 describe 'errors' do
   let(:response) { { 'errcode' => 'M_GENERIC', 'error' => 'Generic error' } }
 

@@ -1,3 +1,6 @@
+# encoding: utf-8
+# frozen_string_literal: true
+
 module Chatrix
   module Api
     # Wraps a matrix instance for use in calling API endpoints.
