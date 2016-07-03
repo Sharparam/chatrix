@@ -28,16 +28,22 @@ module Chatrix
     #   message text, use the `'body'` field of the {#raw} hash.
     attr_reader :body
 
+    # @return [Integer] The timestamp of the message, indicating when
+    #   it was sent, according to the origin server.
+    attr_reader :timestamp
+
     # Initializes a new Message instance.
     #
     # @param sender [User] The user who sent the message.
+    # @param timestamp [Integer] The timestamp of the message.
     # @param content [Hash] The message content.
-    def initialize(sender, content)
+    def initialize(sender, timestamp, content)
       @raw = content
 
       @type = TYPES[@raw['msgtype']]
       @body = @raw['body']
       @sender = sender
+      @timestamp = timestamp
 
       parse_body!
     end

@@ -44,7 +44,10 @@ module Chatrix
       # Process a message event.
       # @param event [Hash] Event data.
       def handle_message(event)
-        message = Message.new @users[event['sender']], event['content']
+        sender = @users[event['sender']]
+        timestamp = event['origin_server_ts'] || Time.now.to_i
+        content = event['content']
+        message = Message.new sender, timestamp, content
         broadcast(:message, @room, message)
         Events.processed event
       end
