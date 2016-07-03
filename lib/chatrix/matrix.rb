@@ -233,7 +233,7 @@ module Chatrix
     #   and value.
     def make_body(content)
       key = content.respond_to?(:read) ? :body_stream : :body
-      value = content.is_a? Hash ? content.to_json : content
+      value = content.is_a?(Hash) ? content.to_json : content
       { key => value }
     end
 
