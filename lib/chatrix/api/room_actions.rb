@@ -202,17 +202,21 @@ module Chatrix
       #
       # @param room [String] The room to send to.
       # @param html [String] The HTML formatted text to send.
+      # @param clean [String, nil] If set, this will be put in the `body`
+      #   field of the content, to be used as the message when the formatted
+      #   version cannot be displayed.
+      #
       # @return (see #send_message_raw)
       #
       # @example Sending an HTML message
       #   send_html('#html:matrix.org',
       #             '<strong>Hello</strong> <em>world</em>!')
-      def send_html(room, html)
+      def send_html(room, html, clean = nil)
         send_message_raw(
           room,
           msgtype: 'm.text',
           format: 'org.matrix.custom.html',
-          body: html.gsub(%r{</?[^>]*?>}, ''), # TODO: Make this better
+          body: clean || html.gsub(%r{</?[^>]*?>}, ''), # TODO: Make this better
           formatted_body: html
         )
       end

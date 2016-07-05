@@ -36,9 +36,12 @@ module Chatrix
 
       # Sends an HTML message to the room.
       # @param message [String] The HTML formatted message to send.
+      # @param clean [String, nil] The "clean" message to use for the `body`
+      #   field for clients that are unable to render the formatted
+      #   message.
       # @return (see #send_message)
-      def send_html(message)
-        @matrix.rooms.actions.send_html @room.id, message
+      def send_html(message, clean = nil)
+        @matrix.rooms.actions.send_html @room.id, message, clean
       end
     end
   end
