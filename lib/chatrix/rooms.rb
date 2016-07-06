@@ -31,7 +31,7 @@ module Chatrix
       return @rooms[id] if id.start_with? '!'
 
       if id.start_with? '#'
-        res = @rooms.find { |_, r| r.alias == id }
+        res = @rooms.find { |_, r| r.canonical_alias == id }
         return res.last if res.respond_to? :last
       end
 
