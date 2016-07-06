@@ -34,6 +34,7 @@ module Chatrix
 
       @rooms.on(:added) do |room|
         broadcast(:room_added, room)
+        room.on(:invited) { |s, i| broadcast(:invited, room, s, i) }
         room.timeline.on(:message) { |r, m| broadcast(:room_message, r, m) }
       end
     end
