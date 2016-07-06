@@ -39,6 +39,15 @@ module Chatrix
       res.last if res.respond_to? :last
     end
 
+    # Attempts to join the specified room.
+    # @param id [String] The room ID to join.
+    # @return [Room] The Room instance for the joined room.
+    # @raise [ForbiddenError] Raised if the user does not have sufficient
+    #   permissions to join the room.
+    def join(id)
+      get_room(id).tap { |r| r.join }
+    end
+
     # Processes a list of room events from syncs.
     #
     # @param events [Hash] A hash of room events as returned from the server.

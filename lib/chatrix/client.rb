@@ -86,6 +86,13 @@ module Chatrix
       @rooms[id]
     end
 
+    # Joins the room with the specified ID.
+    # @param id [String] The room ID to join.
+    # @return [Room] The Room instance for the joined room.
+    def join_room(id)
+      @rooms.join id
+    end
+
     private
 
     # Syncs against the server.
