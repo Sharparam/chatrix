@@ -46,14 +46,27 @@ module Chatrix
     # @see #sync! See the documentation for {#sync!} for more information
     #   and what happens in case of an error during sync.
     def start_syncing
-      @sync_thread ||= Thread.new { loop { sync! } }
+      @sync_thread ||= Thread.new do
+        begin
+          loop { sync! }
+        rescue => e
+          broadcast(:connection_error, e)
+        ensure
+          broadcast(:disconnected)
+        end
+      end
     end
 
     # Stops syncing against the homeserver.
     def stop_syncing
       return unless @sync_thread.is_a? Thread
+
       @sync_thread.exit
       @sync_thread.join
+
+    rescue => e
+      broadcast(:stop_error, e)
+    ensure
       @sync_thread = nil
     end
 
