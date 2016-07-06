@@ -45,7 +45,7 @@ module Chatrix
     # @raise [ForbiddenError] Raised if the user does not have sufficient
     #   permissions to join the room.
     def join(id)
-      get_room(id).tap { |r| r.join }
+      get_room(id).tap(&:join)
     end
 
     # Processes a list of room events from syncs.
