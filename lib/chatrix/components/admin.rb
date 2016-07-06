@@ -30,31 +30,28 @@ module Chatrix
 
       # Kicks a user from the room.
       #
-      # @param user [User,String] The user to kick, can be either a User
-      #   object or a String (user ID).
+      # @param user [User] The user to kick.
       # @param reason [String] The reason for the kick.
       # @return [Boolean] `true` if the user was kicked, otherwise `false`.
       def kick(user, reason)
-        @matrix.rooms.actions.kick @room.id, user, reason
+        @matrix.rooms.actions.kick @room.id, user.id, reason
       end
 
       # Bans a user from the room.
       #
-      # @param user [User,String] The user to kick, can be either a User
-      #   object or a String (user ID).
+      # @param user [User] The user to kick.
       # @param reason [String] The reason for the ban.
       # @return [Boolean] `true` if the user was kicked, otherwise `false`.
       def ban(user, reason)
-        @matrix.rooms.actions.ban @room.id, user, reason
+        @matrix.rooms.actions.ban @room.id, user.id, reason
       end
 
       # Unbans a user from the room.
       #
-      # @param user [User,String] The user to unban, can be either a User
-      #   objec or a String (user ID).
+      # @param user [User] The user to unban.
       # @return [Boolean] `true` if the user was unbanned, otherwise `false`.
       def unban(user)
-        @matrix.rooms.actions.unban @room.id, user
+        @matrix.rooms.actions.unban @room.id, user.id
       end
     end
   end
