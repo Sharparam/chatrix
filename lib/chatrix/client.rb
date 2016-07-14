@@ -53,6 +53,7 @@ module Chatrix
         rescue => e
           broadcast(:connection_error, e)
         ensure
+          stop_syncing
           broadcast(:disconnected)
         end
       end
