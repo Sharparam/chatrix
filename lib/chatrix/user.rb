@@ -38,6 +38,14 @@ module Chatrix
       @memberships[room][:power] || 0
     end
 
+    # Checks if this user is a member of the specified room.
+    # @param room [Room] The room to check.
+    # @return [Boolean] `true` if the user is a member in the room,
+    #   otherwise `false`.
+    def member?(room)
+      @memberships.key?(room) && @memberships[room][:type] == :join
+    end
+
     # Process a member event.
     #
     # @param room [Room] The room that sent the event.
