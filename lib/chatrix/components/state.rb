@@ -140,7 +140,7 @@ module Chatrix
       # @param event [Hash] The member event.
       def handle_member(event)
         @users.process_member_event self, event
-        user = @users[event['sender']]
+        user = @users[event['state_key']]
         membership = event['content']['membership'].to_sym
 
         # Don't process invite state change if the user is already a

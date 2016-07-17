@@ -35,7 +35,8 @@ module Chatrix
     # @param event [Hash] Event data.
     def process_member_event(room, event)
       return if Events.processed? event
-      get_user(event['sender']).process_member_event room, event
+      id = event['state_key'] || event['sender']
+      get_user(id).process_member_event room, event
     end
 
     # Process power level updates.
