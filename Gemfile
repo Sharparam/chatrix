@@ -8,6 +8,11 @@ gemspec
 
 group :development do
   gem 'pry', '~> 0.10'
+
+  gem 'guard', '~> 2.14'
+  gem 'guard-bundler', '~> 2.1', require: false
+  gem 'guard-rspec', '~> 4.7', require: false
+  gem 'guard-rubocop', '~> 1.2'
 end
 
 group :test do
