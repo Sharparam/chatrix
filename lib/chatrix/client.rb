@@ -37,6 +37,8 @@ module Chatrix
         room.on(:invited) { |s, i| broadcast(:invited, room, s, i) }
         room.timeline.on(:message) { |r, m| broadcast(:room_message, r, m) }
       end
+
+      on(:disconnected) { stop_syncing }
     end
 
     # Starts syncing against the homeserver.
@@ -53,7 +55,6 @@ module Chatrix
         rescue => e
           broadcast(:connection_error, e)
         ensure
-          stop_syncing
           broadcast(:disconnected)
         end
       end
