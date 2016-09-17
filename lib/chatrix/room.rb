@@ -12,6 +12,8 @@ module Chatrix
   class Room
     include Wisper::Publisher
 
+    extend Forwardable
+
     # @return [String] The ID of this room.
     attr_reader :id
 
@@ -28,6 +30,15 @@ module Chatrix
     # @return [Messaging] Handle various message actions through this object.
     attr_reader :messaging
 
+    def_delegators :state, :canonical_alias, :name, :topic, :creator,
+                   :guest_access, :join_rule, :history_visibility, :permissions,
+                   :member?
+
+    def_delegators :admin, :join, :leave, :kick, :ban, :unban
+
+    def_delegators :messaging, :send_message, :send_notice, :send_emote,
+                   :send_html
+
     # Initializes a new Room instance.
     #
     # @param id [String] The room ID.
@@ -42,18 +53,8 @@ module Chatrix
       @timeline = Components::Timeline.new self, @users
       @messaging = Components::Messaging.new self, @matrix
       @admin = Components::Admin.new self, @matrix
-    end
 
-    # Convenience method to get the canonical alias from this room's state.
-    # @return [String] The canonical alias for this room.
-    def canonical_alias
-      @state.canonical_alias
-    end
-
-    # Convenience method to get the name from this room's state.
-    # @return [String] The name for this room.
-    def name
-      @state.name
+      @timeline.on(:message) { |r, m| broadcast(:message, r, m) }
     end
 
     # Process join events for this room.
